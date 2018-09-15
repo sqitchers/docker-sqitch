@@ -3,7 +3,13 @@ Sqitch Docker Packaging
 
     docker pull sqitch/sqitch
     curl -L https://git.io/fAX6Z -o sqitch && chmod +x sqitch
-    ./sqitch
+    ./sqitch help
+
+This project is the source for creating the official [Sqitch Project] Docker
+Image. It's built on [Alpine Linux] in an effort to keep the image as compact as
+possible. It includes support for managing PostgreSQL, SQLite, and MySQL
+databases, and may be extended to add support for the other database engines
+that Sqitch supports.
 
 Caveats
 -------
@@ -22,6 +28,7 @@ Caveats
     or Vertica shoiuld be as simple as creating a new image from this one and
     adding the necessary native client and the ODBC drivers and configuration.
 
+[Sqitch Project]: https://sqitch.org
 [Alpine Linux]: https://alpinelinux.org
 [Maria DB package]: https://pkgs.alpinelinux.org/packages?name=mariadb-client&branch=edge
 [because reasons]: https://github.com/docker-library/mysql/issues/179
