@@ -10,7 +10,7 @@ ENV VERSION=0.9998
 WORKDIR /$BUILDROOT
 WORKDIR $BUILDROOT
 RUN apk add --update build-base curl perl perl-dev tzdata \
-        libressl libressl-dev zlib-dev tar \
+        libressl libressl-dev zlib-dev \
         sqlite postgresql-dev mariadb-connector-c-dev unixodbc-dev \
     && cp /usr/share/zoneinfo/UTC /etc/localtime && echo UTC > /etc/timezone \
     && curl -LO https://cpan.metacpan.org/authors/id/D/DW/DWHEELER/App-Sqitch-$VERSION.tar.gz \
@@ -34,11 +34,13 @@ RUN curl -sL --compressed https://git.io/cpm > cpm && chmod +x cpm \
 # Build, test, bundle.
 WORKDIR $BUILDROOT/src
 RUN perl Build.PL --quiet --install_base /app --etcdir /etc \
+    --config installman1dir= --config installsiteman1dir= --config installman3dir= --config installsiteman3dir= \
     --with sqlite --with postgres --with firebird \
-    && ./Build test && ./Build bundle
+    && ./Build test && ./Build bundle \
+    && find /app -name '*.pod' | grep -v sqitch | xargs rm -rf
 
 # Copy to the final image without all the build stuff.
-FROM alpine:latest
+FROM alpine:latest AS sqitch
 RUN apk add --udpate perl tzdata less sqlite postgresql-client mysql-client unixodbc
 
 # XXX Workaround to avoid https://github.com/perl5-dbi/DBD-mysql/issues/262.
@@ -46,9 +48,11 @@ RUN apk add perl-dbd-mysql
 
 # Set the time zone, clear the cache, and install the bundle.
 RUN cp /usr/share/zoneinfo/UTC /etc/localtime && echo UTC > /etc/timezone
-RUN rm -rf /var/cache/*
+RUN rm -rf /var/cache/* /usr/bin/mysql?*
+
 COPY --from=sqitch-build /app .
 COPY --from=sqitch-build /etc /etc/
+RUN rm -rf /man && find / -name '*.pod' | grep -v sqitch | xargs rm -rf
 
 # Set up environment, entrypoint, and default command.
 ENV LESS -R
