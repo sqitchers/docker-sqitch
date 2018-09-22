@@ -11,8 +11,8 @@ docker run -it \
     --mount "type=bind,src=$(pwd),dst=/repo" \
     --mount "type=bind,src=$HOME,dst=/home" \
     -e "SQITCH_USER=$user" \
-    -e "SQITCH_USER_NAME=$fullname" \
-    -e "SQITCH_USER_NAME=$user@$(hostname)" \
+    -e "SQITCH_ORIG_NAME=$fullname" \
+    -e "SQITCH_ORIG_EMAIL=$user@$(hostname)" \
     -e "TZ=$(date +%Z)" \
     -e "LESS=${LESS:--R}" \
     sqitch $@
