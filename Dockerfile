@@ -36,10 +36,11 @@ FROM debian:stable-slim AS sqitch
 # Install runtime system dependencies.
 RUN mkdir -p /usr/share/man/man1 /usr/share/man/man7 \
     && apt-get -qq update \
-    && apt-get -qq install sqlite3 libodbc1 \
+    && apt-get -qq install less libperl5.24 \
+       sqlite3 libodbc1 \
        firebird3.0-utils libfbclient2 \
        libpq5 postgresql-client \
-       mariadb-client-core-10.1 libmariadbclient18 \
+       mariadb-client-core-10.1 libmariadbclient18 libdbd-mysql-perl \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/* /usr/bin/mysql?*
 
@@ -48,12 +49,16 @@ COPY --from=sqitch-build /app .
 COPY --from=sqitch-build /etc /etc/
 
 # Remove unnecessary files.
-RUN rm -rf /man /usr/share/man /usr/share/doc /usr/share/postgresql \
-    && find / -name '*.pod' | grep -v sqitch | xargs rm -rf
+RUN rm -rf /plibs /man /usr/share/man /usr/share/doc /usr/share/postgresql \
+    && apt list --installed | grep python | awk '{print $1}' | xargs apt-get remove -qq \
+    && apt list --installed | grep libmagic | awk '{print $1}' | xargs apt-get remove -qq \
+    && find / -name '*.pod' | grep -v sqitch | xargs rm -rf \
+    && find / -name '*.ph' -delete \
+    && find / -name '*.h' -delete
 
 # Set up environment, entrypoint, and default command.
 ENV LESS -R
 ENV HOME /home
 WORKDIR /repo
-# ENTRYPOINT ["/bin/sqitch"]
-# CMD ["help"]
+ENTRYPOINT ["/bin/sqitch"]
+CMD ["help"]
