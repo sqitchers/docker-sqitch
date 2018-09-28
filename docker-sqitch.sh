@@ -8,6 +8,7 @@ else
 fi
 
 docker run -it \
+    --network host \
     --mount "type=bind,src=$(pwd),dst=/repo" \
     --mount "type=bind,src=$HOME,dst=/home" \
     -e "SQITCH_USER=$user" \
