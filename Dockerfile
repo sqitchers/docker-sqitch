@@ -27,7 +27,7 @@ RUN curl -sL --compressed https://git.io/cpm > cpm && chmod +x cpm \
 WORKDIR $BUILDROOT/src
 RUN perl Build.PL --quiet --install_base /app --etcdir /etc \
     --config installman1dir= --config installsiteman1dir= --config installman3dir= --config installsiteman3dir= \
-    --with sqlite --with postgres --with firebird \
+    --with sqlite --with postgres --with firebird --with odbc \
     && ./Build test && ./Build bundle \
     && find /app -name '*.pod' | grep -v sqitch | xargs rm -rf
 
@@ -38,12 +38,10 @@ FROM debian:stable-slim AS sqitch
 RUN mkdir -p /usr/share/man/man1 /usr/share/man/man7 \
     && apt-get -qq update \
     && apt-get -qq install less libperl5.24 \
-       sqlite3 libodbc1 \
+       sqlite3 \
        firebird3.0-utils libfbclient2 \
        libpq5 postgresql-client \
-       mariadb-client-core-10.1 libmariadbclient18 libdbd-mysql-perl \
-    && apt-get clean \
-    && rm -rf /var/lib/apt/lists/* /usr/bin/mysql?*
+       mariadb-client-core-10.1 libmariadbclient18 libdbd-mysql-perl
 
 # Copy the app and config from the build image.
 COPY --from=sqitch-build /app .
@@ -51,8 +49,10 @@ COPY --from=sqitch-build /etc /etc/
 
 # Remove unnecessary files.
 RUN rm -rf /plibs /man /usr/share/man /usr/share/doc /usr/share/postgresql \
-    && apt list --installed | grep python | awk '{print $1}' | xargs apt-get remove -qq \
-    && apt list --installed | grep libmagic | awk '{print $1}' | xargs apt-get remove -qq \
+    && apt-cache pkgnames | grep python | xargs apt-get purge -qq \
+    && apt-cache pkgnames | grep libmagic | xargs apt-get purge -qq \
+    && apt-get clean \
+    && rm -rf /var/cache/apt/* /var/lib/apt/lists/* /usr/bin/mysql?* \
     && find / -name '*.pod' | grep -v sqitch | xargs rm -rf \
     && find / -name '*.ph' -delete \
     && find / -name '*.h' -delete
@@ -60,6 +60,8 @@ RUN rm -rf /plibs /man /usr/share/man /usr/share/doc /usr/share/postgresql \
 # Set up environment, entrypoint, and default command.
 ENV LESS -R
 ENV HOME /home
+ENV LC_ALL C.UTF-8
+ENV LANG C.UTF-8
 WORKDIR /repo
 ENTRYPOINT ["/bin/sqitch"]
 CMD ["help"]
