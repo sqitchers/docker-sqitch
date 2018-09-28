@@ -1,0 +1,4 @@
+*.tgz
+*.gz
+*.bz2
+/snowflake/*.bash
