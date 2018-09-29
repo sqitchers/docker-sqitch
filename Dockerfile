@@ -38,7 +38,7 @@ FROM debian:stable-slim AS sqitch
 # Install runtime system dependencies and remove unnecesary files.
 RUN mkdir -p /usr/share/man/man1 /usr/share/man/man7 \
     && apt-get -qq update \
-    && apt-get -qq install less libperl5.24 \
+    && apt-get -qq --no-install-recommends install less libperl5.24 \
        sqlite3 \
        firebird3.0-utils libfbclient2 \
        libpq5 postgresql-client \
@@ -57,10 +57,7 @@ COPY --from=sqitch-build /app .
 COPY --from=sqitch-build /etc /etc/
 
 # Set up environment, entrypoint, and default command.
-ENV LESS -R
-ENV HOME /home
-ENV LC_ALL C.UTF-8
-ENV LANG C.UTF-8
+ENV LESS=-R HOME=/home LC_ALL=C.UTF-8 LANG=C.UTF-8
 WORKDIR /repo
 ENTRYPOINT ["/bin/sqitch"]
 CMD ["help"]

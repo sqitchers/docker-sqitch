@@ -3,7 +3,7 @@ MAINTAINER David E. Wheeler <david@justatheory.com>
 
 # Install prereqs.
 RUN apt-get -qq update \
-    && apt-get -qq install unixodbc \
+    && apt-get -qq --no-install-recommends install unixodbc \
     && apt-get clean \
     && rm -rf /var/cache/apt/* /var/lib/apt/lists/*
 
