@@ -6,33 +6,41 @@ Sqitch Docker Packaging
     ./sqitch help
 
 This project is the source for creating the official [Sqitch Project] Docker
-Image. It's built on [Alpine Linux] in an effort to keep the image as compact as
-possible. It includes support for managing PostgreSQL, SQLite, and MySQL
-databases, and may be extended to add support for the other database engines
-that Sqitch supports.
+Image. It's built on [stable Debian slim] in an effort to keep the image as
+small as possible while supporting all known engines. It includes support for
+managing [PostgreSQL], [SQLite], [MariaDB] ([MySQL]), and [Firebird] databases,
+and other images may be built to support for the other database engines that
+Sqitch supports.
 
-Caveats
--------
+Notes
+-----
 
-*   Built on [Alpine Linux], which currently provides a [Maria DB package],
-    but not MySQL, [because reasons].
-*   The driver for [Firebird] is included, but not the Firebird driver
-    library or the `isql` client. They might be included in the future if
-    a package Firebird is ever created for Alpine; otherwise, one can create
-    a new Docker image from this one, add Firebird, and go.
-*   Oracle support may never be provided, since the required [Instant Client]
-    are not publicly available. If you have access to the libraries, you
-    can create a new docker image from this one and add the the Basic, API,
-    and SQL*Plus libraries, as well as [DBD::Oracle], and it should work.
-*   The [unixODBC] library is included, so adding support for Snowflake, Exasol,
-    or Vertica shoiuld be as simple as creating a new image from this one and
-    adding the necessary native client and the ODBC drivers and configuration.
+*   The [`docker-sqitch.sh`] shell script is the easiest way to run Sqitch from
+    a Docker image. The script mounts the current directory and the home
+    directory, so that it acts on the Sqitch project in the current directory
+    and reads configuration from the home directory almost as if it was running
+    natively on the local host. It also copies over most of the environment
+    variables that Sqitch cares about, for transparent configuration.
+*   Custom images for [Oracle], [Snowflake], [Exasol], or [Vertica] can be built
+    by downloading the appropriate binary files and using the `Dockerfiles` in
+    the appropriately-named subdirectories of this repository.
+*   In an effort to keep things as simple as possible, the only editor included
+    and configured for use in the image is [nano]. This is a very simple, tiny
+    text editor suitable for editing change descriptions and the like. Its
+    interface always provides menus to make it easy to figure out how to use it.
+    If you need another editor, this image isn't for you, but you can create
+    one based on this image and add whatever editors you like.
 
-[Sqitch Project]: https://sqitch.org
-[Alpine Linux]: https://alpinelinux.org
-[Maria DB package]: https://pkgs.alpinelinux.org/packages?name=mariadb-client&branch=edge
-[because reasons]: https://github.com/docker-library/mysql/issues/179
-[Firebird]: https://www.firebirdsql.org
-[Instant Client]: http://www.oracle.com/technetwork/database/database-technologies/instant-client/overview/index.html
-[DBD::Oracle]: https://metacpan.org/pod/DBD::Oracle
-[unixODBC]: http://www.unixodbc.org
+  [Sqitch Project]: https://sqitch.org
+  [stable Debian slim]: https://docs.docker.com/samples/library/debian/#debiansuite-slim
+  [PostgreSQL]: https://postgresql.org
+  [SQLite]: https://sqlite.org/
+  [MariaDB]: https://mariadb.com/
+  [MySQL]: https://mysql.com/
+  [Firebird]: https://www.firebirdsql.org
+  [`docker-sqitch.sh`]: https://git.io/fAX6Z
+  [Oracle]: https://www.oracle.com/database/
+  [Snowflake]:https://www.snowflake.com
+  [Exasol]:https://www.exasol.com/
+  [Vertica]: https://www.vertica.com
+  [nano]: https://www.nano-editor.org/
