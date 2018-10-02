@@ -7,7 +7,7 @@ Sqitch Snowflake Docker Image
 2.  Download the [ODBC driver] 64-bit TGZ for Linux to this directory. Its
     name should match this pattern: `snowflake_linux_x8664_odbc-{VERSION}.tgz`.
 
-3.  Build an image named `sqitch-snowsql` with this command, replacding
+3.  Build an image named `sqitch-snowsql` with this command, replacing
     `$ACCOUNT` with your organization's Snowflake account name:
 
          docker build -t sqitch-snowflake --build-arg sf_account=$ACCOUNT .
