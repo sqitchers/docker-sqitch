@@ -12,7 +12,7 @@ Sqitch Oracle Docker Image
 
          docker build -t sqitch-oracle .
 
-3.  Set up a `tnsnames.ora` file in your home directory. For example,
+3.  Set up a [`tnsnames.ora` file] in your home directory. For example,
     `~./sqlplus/tnsnames.ora`.
 
 4.  Set the `$TNS_ADMIN` environment variable to the directory of the `tnsnames.ora`
@@ -26,3 +26,4 @@ Sqitch Oracle Docker Image
     Sqitch configuration files.
 
 [Instant Client] https://www.oracle.com/technetwork/topics/linuxx86-64soft-092277.html
+[`tnsnames.ora` file]: https://orafaq.com/wiki/Tnsnames.ora
