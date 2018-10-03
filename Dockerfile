@@ -23,12 +23,13 @@ RUN curl -sL --compressed https://git.io/cpm > cpm && chmod +x cpm \
     && ./cpm install -L local --verbose --no-test --with-recommends \
         --with-configure --cpanfile src/dist/cpanfile
 
-# Build, test, bundle.
+# Build, test, bundle, prune.
 WORKDIR $BUILDROOT/src
 RUN perl Build.PL --quiet --install_base /app --etcdir /etc/sqitch \
     --config installman1dir= --config installsiteman1dir= --config installman3dir= --config installsiteman3dir= \
     --with sqlite --with postgres --with firebird --with odbc \
     && ./Build test && ./Build bundle \
+    && rm -rf /app/man \
     && find /app -name '*.pod' | grep -v sqitch | xargs rm -rf
 
 ################################################################################
