@@ -10,6 +10,11 @@ RUN apt-get -qq update \
 WORKDIR /work
 COPY *.tgz *.bash conf ./
 
+# Tell SnowSQL where to store its versions and config. Need to keep it inside
+# the image so it doesn't try to load the version from $HOME, which will
+# typically be mounted to point to the originating host.
+ENV WORKSPACE /var/snowsql
+
 # Configure ODBC. https://docs.snowflake.net/manuals/user-guide/odbc-linux.html
 ARG sf_account
 RUN gunzip *.tgz && tar xf *.tar  \
@@ -20,9 +25,10 @@ RUN gunzip *.tgz && tar xf *.tar  \
     && perl -i -pe "s/SF_ACCOUNT/$sf_account/g" odbc.ini \
     && cat odbc.ini >> /etc/odbc.ini \
     && cat odbcinst.ini >> /etc/odbcinst.ini \
-    # Unpack and upgrade snowsql.
+    # Unpack and upgrade snowsql, then overwrite its config file.
     && sed -e '1,/^exit$/d' snowsql-*-linux_x86_64.bash | (cd /bin && tar zxf -) \
     && snowsql -Uv \
+    && echo "[connections]\naccountname = $sf_account\n\n[options]\nnoup = true" > /var/snowsql/.snowsql/config \
     # Clean up.
     && cd / && rm -rf /work
 
