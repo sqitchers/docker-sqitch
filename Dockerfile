@@ -5,14 +5,14 @@ ENV VERSION=0.9998
 
 WORKDIR /$BUILDROOT
 WORKDIR $BUILDROOT
-COPY App-Sqitch-$VERSION.tar.gz .
+# COPY App-Sqitch-$VERSION.tar.gz .
 
 # Install system dependencies.
 RUN mkdir -p /usr/share/man/man1 /usr/share/man/man7 \
     && apt-get -qq update \
     && apt-get -qq install build-essential perl curl \
        unixodbc-dev firebird-dev sqlite libpq-dev libmariadbclient-dev \
-    # && curl -LO https://cpan.metacpan.org/authors/id/D/DW/DWHEELER/App-Sqitch-$VERSION.tar.gz . \
+    && curl -LO https://cpan.metacpan.org/authors/id/D/DW/DWHEELER/App-Sqitch-$VERSION.tar.gz . \
     && mkdir src \
     && tar -zxf App-Sqitch-$VERSION.tar.gz --strip-components 1 -C src
 
