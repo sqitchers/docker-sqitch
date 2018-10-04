@@ -29,8 +29,7 @@ RUN mkdir -p /usr/share/man/man1 /usr/share/man/man7 \
     && find local -type d -empty -delete \
     && rm -rf instantclient.install/*.jar instantclient.install/*README instantclient.install/nework
 
-FROM sqitch:latest
-MAINTAINER David E. Wheeler <david@justatheory.com>
+FROM sqitch/sqitch:latest
 
 # Install instantclient basic and SQL*Plus and copy DBD::Oracle.
 COPY --from=ora-build /work/instantclient.install /instantclient/

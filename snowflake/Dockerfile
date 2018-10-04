@@ -1,4 +1,4 @@
-FROM sqitch:latest
+FROM sqitch/sqitch:latest
 
 # Install prereqs.
 RUN apt-get -qq update \

@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Determine which Docker image to run.
-SQITCH_IMAGE=${SQITCH_IMAGE:=sqitch:latest}
+SQITCH_IMAGE=${SQITCH_IMAGE:=sqitch/sqitch:latest}
 
 # Figure out who I am.
 user=${USER-$(whoami)}

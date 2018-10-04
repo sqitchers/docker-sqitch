@@ -1,0 +1,8 @@
+language: bash
+services: docker
+
+script:
+  - make sqitch
+
+after_script:
+  - docker images
