@@ -1,5 +1,4 @@
 FROM debian:stable-slim AS ora-build
-MAINTAINER David E. Wheeler <david@justatheory.com>
 
 WORKDIR /work
 COPY *.zip ./

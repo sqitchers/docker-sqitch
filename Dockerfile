@@ -1,30 +1,25 @@
 FROM debian:stable-slim AS sqitch-build
-MAINTAINER David E. Wheeler <david@justatheory.com>
-ENV BUILDROOT /work
-ENV VERSION=0.9998
-
-WORKDIR /$BUILDROOT
-WORKDIR $BUILDROOT
-# COPY App-Sqitch-$VERSION.tar.gz .
 
 # Install system dependencies.
+WORKDIR /work
+ARG VERSION
 RUN mkdir -p /usr/share/man/man1 /usr/share/man/man7 \
     && apt-get -qq update \
     && apt-get -qq install build-essential perl curl \
        unixodbc-dev firebird-dev sqlite libpq-dev libmariadbclient-dev \
-    && curl -LO https://cpan.metacpan.org/authors/id/D/DW/DWHEELER/App-Sqitch-$VERSION.tar.gz . \
+    && curl -LO https://cpan.metacpan.org/authors/id/D/DW/DWHEELER/App-Sqitch-$VERSION.tar.gz \
     && mkdir src \
     && tar -zxf App-Sqitch-$VERSION.tar.gz --strip-components 1 -C src
 
 # Install cpan and build dependencies.
-ENV PERL5LIB $BUILDROOT/local/lib/perl5
+ENV PERL5LIB /work/local/lib/perl5
 RUN curl -sL --compressed https://git.io/cpm > cpm && chmod +x cpm \
     && ./cpm install -L local --verbose --no-test ExtUtils::MakeMaker \
     && ./cpm install -L local --verbose --no-test --with-recommends \
         --with-configure --cpanfile src/dist/cpanfile
 
 # Build, test, bundle, prune.
-WORKDIR $BUILDROOT/src
+WORKDIR /work/src
 RUN perl Build.PL --quiet --install_base /app --etcdir /etc/sqitch \
     --config installman1dir= --config installsiteman1dir= --config installman3dir= --config installsiteman3dir= \
     --with sqlite --with postgres --with firebird --with odbc \

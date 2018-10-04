@@ -1,5 +1,4 @@
 FROM sqitch:latest
-MAINTAINER David E. Wheeler <david@justatheory.com>
 
 # Install prereqs.
 RUN apt-get -qq update \
