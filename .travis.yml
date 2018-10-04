@@ -1,16 +1,13 @@
 language: bash
 services: docker
 
-env:
-  global:
-    DOCKER_USER:
-      secure: Z+WPFhj8zKLX1xL0rGq7faS+mzDRHPbxic3glBODx0dONxXQG5wZBwFGhkWWI2AMaE4qqKfCG40keBkBRW77eOGUgOcl4PeEkgYM/cDOl2fUJHTGXkGUlNiGM+JvMF6mDS9fy4GwlsbAuIlC6e4ptvK2EVsWVGOdEBQca36sQtI70IS7XERug4OfP+BUyMirBfNJD4bkd47QuO+rmPN3RJAHNFRY3gr8+1MGRD1o/LzCrkS+CHI9bfrgIbHcWGWT95L2qxaFAQAyJdh1ZbekxWLIvxtZQLlM3pv5t3hW/NWW2B4W0YN0GyHxshJAs90xoQ8yRmvrOmq7FvrKyXalUbgWh8pN0Zwot2h9p5yAbMOxNwehkh0jJGCJshWhcV5dJv7HCD5lFycBwtZ+oEYLFShamvaZUm3CuV9OElodnK54T5g4poR0wbwd3i4eijLGf4+MeA8MckWfelMW+ncggCIJh82UPnlfWJXHKKPEWaJPU9/UaGM6l0dP6IXxFENhEL+sNSJ3zORGLI7oAbyFWeygxPWMA9y13tteYeCvTma2Mf8PbmRmu+w3BEr/sNmNnLDtufn5i99uJrD3zDOU74yakmtMfkSKIpjPOgsEI5N5Gt7MdON6dpWH/zLoqm3coAyU5MyuO6ASIUJ0XqtpIh/IpdGZsiARUWmGiDsZEFM=
-    DOCKER_PASS:
-      secure: dePyUF6G+Nvmz1KZ6x32vLdxY7anMtQgjSlQX1Z4aG54gePxjF5DxoJN7H0D5BTu+wsxlRaHvmH+EBtsL8bCSig7uKUa0uOr1e5F4tE0wAxtRZcyD3MfWxqWUnHZMi2oZ71zx9pN4aqK4NndquJlFd7CuDRaS4U1Qph9CnnuqNoqge3jCs933H3yNHE2yH/ZlsruPVj35MqCa/Y438/0SUdlsFvA1u+wvdLCKn4+BKp2QcK5KSHu8/YhmdzbF+UmHcxczo+nusPBkdufh0V9XIB0WVt4352GDmQj1L8JMX/u6Jd/29HanCcVF5WmH+bA0bMSk4vugwCU4ejolwebpikISkfG+BzMPAmiriId9m9BpyyPYZstmvL9GKSqVYNGFWGyjyQtdEAxTiYvvFbxa23TYI4n79864yHQFJU1WzwqynARFK9DIGnucTPKYn8/MNf6CgblxHqXDqeULez6rIhkmxEzrXnRwrdNm8Bp7YBeqYRrSCfIxhYYXHhzbF1vowSZNhgEi8lzf3Ukf56O3MBLgieHA3eTdcU6HcCuPKjfqPDgbSdf85Gn6PhVoilcVrlPoYLk8hcQK1QUJ4f2KnbN6L4fOEwoeOLOui627DmzgQ+4aFUkHG4/MAQG8H0iR5d1+3nQKYbiKxvk7QcKfJTl5yeLljLA3hH6+8d7sKY=
+script:
+  - ./build .
 
 after_script:
   - docker images
 
+# DOCKER_USER and $DOCKER_PASS are set in the Travis settings for the project.
 after_success:
   - echo "$DOCKER_PASS" | docker login -u "$DOCKER_USER" --password-stdin
   - docker push sqitch/sqitch
