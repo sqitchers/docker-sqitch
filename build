@@ -10,10 +10,16 @@ if [ -z "$DIR" ]; then
     exit 1
 fi
 
+# For main Sqitch build, the main tag is "latest" and there
+# is no sub-package.
 PKG=""
+TAG="latest"
 if [ "$DIR" != "." ]; then
+    # For oher builds, we need to append a sub-package name and use the
+    # diretory name as the main tag.
     cd $DIR
-    PKG=""
+    PKG="-$DIR"
+    TAG="$DIR"
 fi
 
 docker build --pull \
@@ -29,8 +35,8 @@ docker build --pull \
   --label org.opencontainers.image.ref.name="sqitch${PKG}-${VERSION}" \
   --label org.opencontainers.image.title="Sqitch" \
   --label org.opencontainers.image.description="Sane database change management" \
-  --tag sqitch/sqitch:latest \
-  --tag sqitch/sqitch:${VERSION} \
+  --tag sqitch/sqitch:${TAG} \
+  --tag sqitch/sqitch:${VERSION}${PKG} \
   --build-arg VERSION=${VERSION} \
   .
 
