@@ -2,7 +2,7 @@ language: bash
 services: docker
 
 script:
-  - ./build .
+  - ./build
 
 after_script:
   - docker images
