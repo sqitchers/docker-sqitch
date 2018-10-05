@@ -2,12 +2,17 @@
 
 set -e
 
+NAME=sqitch
 VERSION=0.9998
 
 DIR=$1
 if [ -z "$DIR" ]; then
-    echo Usage: $0 [DIRECTORY]
+    echo Usage: $0 <directory> [<prefix>]
     exit 1
+fi
+PREFIX=$2
+if [ -z "$PREFIX" ]; then
+    PREFIX=$NAME
 fi
 
 # For main Sqitch build, the main tag is "latest" and there
@@ -35,8 +40,8 @@ docker build --pull \
   --label org.opencontainers.image.ref.name="sqitch${PKG}-${VERSION}" \
   --label org.opencontainers.image.title="Sqitch" \
   --label org.opencontainers.image.description="Sane database change management" \
-  --tag sqitch/sqitch:${TAG} \
-  --tag sqitch/sqitch:${VERSION}${PKG} \
+  --tag ${PREFIX}/${NAME}:${TAG} \
+  --tag ${PREFIX}/${NAME}:${VERSION}${PKG} \
   --build-arg VERSION=${VERSION} \
   .
 
