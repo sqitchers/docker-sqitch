@@ -1,10 +1,4 @@
-FROM sqitch/sqitch:latest
-
-# Install prereqs.
-RUN apt-get -qq update \
-    && apt-get -qq --no-install-recommends install unixodbc \
-    && apt-get clean \
-    && rm -rf /var/cache/apt/* /var/lib/apt/lists/*
+FROM debian:stable-slim AS snow-build
 
 WORKDIR /work
 COPY *.tgz *.bash conf ./
@@ -14,22 +8,41 @@ COPY *.tgz *.bash conf ./
 # typically be mounted to point to the originating host.
 ENV WORKSPACE /var/snowsql
 
-# Configure ODBC. https://docs.snowflake.net/manuals/user-guide/odbc-linux.html
+# Set locale for Python triggers.
+ENV LC_ALL=C.UTF-8 LANG=C.UTF-8
+
+# Install prereqs.
 ARG sf_account
-RUN gunzip *.tgz && tar xf *.tar  \
-    && mv simba.snowflake.ini snowflake_odbc/lib/ \
-    && mkdir -p /usr/lib/snowflake/odbc/log \
-    && mv snowflake_odbc/lib /usr/lib/snowflake/odbc/ \
-    && mv snowflake_odbc/ErrorMessages /usr/lib/snowflake/odbc \
+RUN apt-get -qq update \
+    && apt-get -qq --no-install-recommends install odbcinst \
+    # Configure ODBC. https://docs.snowflake.net/manuals/user-guide/odbc-linux.html
+    && gunzip *.tgz && tar xf *.tar  \
+    && mkdir odbc \
+    && mv snowflake_odbc/lib snowflake_odbc/ErrorMessages odbc/ \
+    && mv simba.snowflake.ini odbc/lib/ \
     && perl -i -pe "s/SF_ACCOUNT/$sf_account/g" odbc.ini \
     && cat odbc.ini >> /etc/odbc.ini \
     && cat odbcinst.ini >> /etc/odbcinst.ini \
     # Unpack and upgrade snowsql, then overwrite its config file.
-    && sed -e '1,/^exit$/d' snowsql-*-linux_x86_64.bash | (cd /bin && tar zxf -) \
-    && snowsql -Uv \
-    && echo "[connections]\naccountname = $sf_account\n\n[options]\nnoup = true" > /var/snowsql/.snowsql/config \
-    # Clean up.
-    && cd / && rm -rf /work
+    && sed -e '1,/^exit$/d' snowsql-*-linux_x86_64.bash | tar zxf - \
+    && ./snowsql -Uv \
+    && echo "[connections]\naccountname = $sf_account\n\n[options]\nnoup = true" > /var/snowsql/.snowsql/config
 
-# Move to repo directory and clean up.
-WORKDIR /repo
+FROM sqitch/sqitch:latest
+
+# Install runtime dependencies, remove unnecesary files, and create log dir.
+RUN apt-get -qq update \
+    && apt-get -qq --no-install-recommends install unixodbc \
+    && apt-get clean \
+    && rm -rf /var/cache/apt/* /var/lib/apt/lists/* \
+    && rm -rf /man /usr/share/man /usr/share/doc \
+    && mkdir -p /usr/lib/snowflake/odbc/log
+
+# Install SnowSQL plus the ODDB driver and config.
+COPY --from=snow-build  /work/snowsql /bin/
+COPY --from=snow-build /var/snowsql /var/
+COPY --from=snow-build /work/odbc /usr/lib/snowflake/odbc/
+COPY --from=snow-build  /etc/odbc* /etc/
+
+# The .snowsql directory is copied to /var.
+ENV WORKSPACE /var

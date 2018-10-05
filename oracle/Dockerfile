@@ -41,8 +41,7 @@ RUN mkdir -p /usr/share/man/man1 /usr/share/man/man7 \
     && apt-get install -qq --no-install-recommends libaio1 \
     && apt-get clean \
     && rm -rf /var/cache/apt/* /var/lib/apt/lists/* /usr/bin/mysql?* \
-    && rm -rf /plibs /man /usr/share/man /usr/share/doc /usr/share/postgresql
+    && rm -rf /plibs /man /usr/share/man /usr/share/doc \
 
 # Set up environment and move to repo directory.
 ENV ORACLE_HOME=/instantclient LD_LIBRARY_PATH=/instantclient
-WORKDIR /repo

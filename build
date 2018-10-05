@@ -5,15 +5,8 @@ set -e
 NAME=sqitch
 VERSION=0.9998
 
-DIR=$1
-if [ -z "$DIR" ]; then
-    echo Usage: $0 <directory> [<prefix>]
-    exit 1
-fi
-PREFIX=$2
-if [ -z "$PREFIX" ]; then
-    PREFIX=$NAME
-fi
+DIR=${DIR:=.}
+REGISTRY=${REGISTRY:="$NAME"}
 
 # For main Sqitch build, the main tag is "latest" and there
 # is no sub-package.
@@ -33,15 +26,15 @@ docker build --pull \
   --label org.opencontainers.image.url="https://hub.docker.com/r/sqitch/sqitch/" \
   --label org.opencontainers.image.documentation="https://github.com/sqitchers/docker-sqitch#readme" \
   --label org.opencontainers.image.source="https://github.com/sqitchers/docker-sqitch" \
-  --label org.opencontainers.image.version="0.9998" \
+  --label org.opencontainers.image.version="$VERSION" \
   --label org.opencontainers.image.revision="$(git rev-parse --abbrev-ref HEAD)" \
   --label org.opencontainers.image.vendor="The Sqitch Community" \
   --label org.opencontainers.image.licenses="MIT" \
   --label org.opencontainers.image.ref.name="sqitch${PKG}-${VERSION}" \
   --label org.opencontainers.image.title="Sqitch" \
   --label org.opencontainers.image.description="Sane database change management" \
-  --tag ${PREFIX}/${NAME}:${TAG} \
-  --tag ${PREFIX}/${NAME}:${VERSION}${PKG} \
-  --build-arg VERSION=${VERSION} \
-  .
+  --tag "${REGISTRY}/${NAME}:${TAG}" \
+  --tag "${REGISTRY}/${NAME}:${VERSION}${PKG}" \
+  --build-arg "VERSION=${VERSION}" \
+  "$@" .
 
