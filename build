@@ -13,7 +13,7 @@ REGISTRY=${REGISTRY:="$NAME"}
 PKG=""
 TAG="latest"
 if [ "$DIR" != "." ]; then
-    # For oher builds, we need to append a sub-package name and use the
+    # For other builds, we need to append a sub-package name and use the
     # diretory name as the main tag.
     cd $DIR
     PKG="-$DIR"
