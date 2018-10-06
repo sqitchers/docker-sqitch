@@ -54,7 +54,7 @@ COPY --from=sqitch-build /app .
 COPY --from=sqitch-build /etc /etc/
 
 # Set up environment, entrypoint, and default command.
-ENV LESS=-R HOME=/home LC_ALL=C.UTF-8 LANG=C.UTF-8 SQITCH_EDITOR=nano
+ENV LESS=-R HOME=/home LC_ALL=C.UTF-8 LANG=C.UTF-8 SQITCH_EDITOR=nano SQITCH_PAGER=less
 WORKDIR /repo
 ENTRYPOINT ["/bin/sqitch"]
 CMD ["help"]
