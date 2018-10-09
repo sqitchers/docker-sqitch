@@ -1,5 +1,10 @@
 #!/bin/bash
 
+# Figure out in which directory to mount as '/repo'
+GIT_ROOT=$(git rev-parse --show-toplevel 2>/dev/null)
+SQITCH_ROOT=${GIT_ROOT:-$(pwd)}
+SQITCH_REPO=${SQITCH_ROOT}${SQITCH_FOLDER:+/${SQITCH_FOLDER}}
+
 # Determine which Docker image to run.
 SQITCH_IMAGE=${SQITCH_IMAGE:=sqitch/sqitch:latest}
 
@@ -38,6 +43,6 @@ done
 
 # Run the container with the current and home directories mounted.
 docker run -it --rm --network host \
-    --mount "type=bind,src=$(pwd),dst=/repo" \
+    --mount "type=bind,src=${SQITCH_REPO:?},dst=/repo" \
     --mount "type=bind,src=$HOME,dst=/home" \
     "${passenv[@]}" "$SQITCH_IMAGE" "$@"
