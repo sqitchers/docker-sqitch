@@ -34,7 +34,7 @@ FROM debian:stable-slim AS sqitch
 # Install runtime system dependencies and remove unnecesary files.
 RUN mkdir -p /usr/share/man/man1 /usr/share/man/man7 \
     && apt-get -qq update \
-    && apt-get -qq --no-install-recommends install less libperl5.24 nano \
+    && apt-get -qq --no-install-recommends install less libperl5.24 perl-doc nano \
        sqlite3 \
        firebird3.0-utils libfbclient2 \
        libpq5 postgresql-client \
