@@ -21,6 +21,10 @@ Notes
     and reads configuration from the home directory almost as if it was running
     natively on the local host. It also copies over most of the environment
     variables that Sqitch cares about, for transparent configuration.
+*   By default, the Docker image runs via the user `sqitch`. If your engine
+    falls back on the system username when connecting to the database (as the
+    PostgreSQL engine does), you will likely want to set the username in sqitch
+    target URIs, or set the proper [environment variables] to fall back on.
 *   Custom images for [Oracle], [Snowflake], [Exasol], or [Vertica] can be built
     by downloading the appropriate binary files and using the `Dockerfiles` in
     the appropriately-named subdirectories of this repository.
@@ -39,6 +43,7 @@ Notes
   [MySQL]: https://mysql.com/
   [Firebird]: https://www.firebirdsql.org
   [`docker-sqitch.sh`]: https://git.io/fAX6Z
+  [environment variables]: http://metacpan.org/pod/sqitch-environment
   [Oracle]: https://www.oracle.com/database/
   [Snowflake]:https://www.snowflake.com
   [Exasol]:https://www.exasol.com/

@@ -47,14 +47,17 @@ RUN mkdir -p /usr/share/man/man1 /usr/share/man/man7 \
         /usr/share/nano /etc/nanorc \
     && find / -name '*.pod' | grep -v sqitch | xargs rm -rf \
     && find / -name '*.ph' -delete \
-    && find / -name '*.h' -delete
+    && find / -name '*.h' -delete \
+    && groupadd -r sqitch --gid=1024 \
+    && useradd -r -g sqitch --uid=1024 -d /home sqitch
 
 # Copy the app and config from the build image.
 COPY --from=sqitch-build /app .
-COPY --from=sqitch-build /etc /etc/
+COPY --from=sqitch-build /etc/sqitch /etc/sqitch/
 
 # Set up environment, entrypoint, and default command.
-ENV LESS=-R HOME=/root LC_ALL=C.UTF-8 LANG=C.UTF-8 SQITCH_EDITOR=nano SQITCH_PAGER=less
+ENV LESS=-R LC_ALL=C.UTF-8 LANG=C.UTF-8 SQITCH_EDITOR=nano SQITCH_PAGER=less
+USER sqitch
 WORKDIR /repo
 ENTRYPOINT ["/bin/sqitch"]
 CMD ["help"]
