@@ -2,12 +2,12 @@
 .PHONY: oracle snowflake vertica exasol firebird postgres mysql sqlite
 
 sqitch: Dockerfile
-	./build .
+	./build
 
 oracle: oracle/Dockerfile
-	./build oracle
+	env DIR=oracle REGISTRY=sqitch ./build
 
 snowflake: snowflake/Dockerfile
-	./build snowflake
+	env DIR=snowflake REGISTRY=sqitch ./build --build-arg sf_account=example
 
 

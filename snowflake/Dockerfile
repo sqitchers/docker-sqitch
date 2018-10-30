@@ -31,6 +31,7 @@ RUN apt-get -qq update \
 FROM sqitch/sqitch:latest
 
 # Install runtime dependencies, remove unnecesary files, and create log dir.
+USER root
 RUN apt-get -qq update \
     && apt-get -qq --no-install-recommends install unixodbc \
     && apt-get clean \
@@ -45,4 +46,5 @@ COPY --from=snow-build /work/odbc /usr/lib/snowflake/odbc/
 COPY --from=snow-build  /etc/odbc* /etc/
 
 # The .snowsql directory is copied to /var.
+USER sqitch
 ENV WORKSPACE /var

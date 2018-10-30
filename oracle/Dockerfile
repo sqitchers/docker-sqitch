@@ -32,6 +32,7 @@ RUN mkdir -p /usr/share/man/man1 /usr/share/man/man7 \
 FROM sqitch/sqitch:latest
 
 # Install instantclient basic and SQL*Plus and copy DBD::Oracle.
+USER root
 COPY --from=ora-build /work/instantclient.install /instantclient/
 COPY --from=ora-build /work/local/lib/perl5 /lib/perl5/
 
@@ -43,5 +44,6 @@ RUN mkdir -p /usr/share/man/man1 /usr/share/man/man7 \
     && rm -rf /var/cache/apt/* /var/lib/apt/lists/* /usr/bin/mysql?* \
     && rm -rf /plibs /man /usr/share/man /usr/share/doc \
 
-# Set up environment and move to repo directory.
+# Set up user and environment.
+USER sqitch
 ENV ORACLE_HOME=/instantclient LD_LIBRARY_PATH=/instantclient
