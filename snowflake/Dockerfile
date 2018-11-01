@@ -40,10 +40,11 @@ RUN apt-get -qq update \
     && mkdir -p /usr/lib/snowflake/odbc/log
 
 # Install SnowSQL plus the ODDB driver and config.
-COPY --from=snow-build  /work/snowsql /bin/
-COPY --from=snow-build /var/snowsql /var/
+COPY --from=snow-build /work/snowsql /var/
+COPY --from=snow-build --chown=sqitch:sqitch /var/snowsql /var/
 COPY --from=snow-build /work/odbc /usr/lib/snowflake/odbc/
-COPY --from=snow-build  /etc/odbc* /etc/
+COPY --from=snow-build /etc/odbc* /etc/
+COPY snowsql.sh /usr/bin/snowsql
 
 # The .snowsql directory is copied to /var.
 USER sqitch
