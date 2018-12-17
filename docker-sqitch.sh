@@ -31,8 +31,8 @@ for var in \
     VSQL_HOST VSQL_PORT VSQL_USER VSQL_PASSWORD VSQL_SSLMODE \
     SNOWSQL_ACCOUNT SNOWSQL_USER SNOWSQL_PWD SNOWSQL_HOST SNOWSQL_PORT SNOWSQL_DATABASE SNOWSQL_REGION NOWSQL_WAREHOUSE
 do
-    if [ ! -z "${!var}" ]; then
-       passenv+=("-e" "$var=${!var}")
+    if [ -n "${!var}" ]; then
+       passenv+=(-e $var)
     fi
 done
 
