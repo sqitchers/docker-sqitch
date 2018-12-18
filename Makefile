@@ -10,4 +10,6 @@ oracle: oracle/Dockerfile
 snowflake: snowflake/Dockerfile
 	env DIR=snowflake REGISTRY=sqitch ./build --build-arg sf_account=example
 
+exasol: exasol/Dockerfile
+	env DIR=exasol REGISTRY=sqitch ./build
 
