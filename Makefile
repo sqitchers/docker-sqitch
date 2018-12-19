@@ -12,4 +12,3 @@ snowflake: snowflake/Dockerfile
 
 exasol: exasol/Dockerfile
 	env DIR=exasol REGISTRY=sqitch ./build
-
