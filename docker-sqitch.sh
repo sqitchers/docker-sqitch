@@ -12,7 +12,7 @@ else
 fi
 
 # Set up required pass-through variables.
-passenv=(
+passopt=(
     -e "SQITCH_ORIG_SYSUSER=$user"
     -e "SQITCH_ORIG_FULLNAME=$fullname"
     -e "SQITCH_ORIG_EMAIL=$user@$(hostname)"
@@ -32,12 +32,19 @@ for var in \
     SNOWSQL_ACCOUNT SNOWSQL_USER SNOWSQL_PWD SNOWSQL_HOST SNOWSQL_PORT SNOWSQL_DATABASE SNOWSQL_REGION NOWSQL_WAREHOUSE
 do
     if [ -n "${!var}" ]; then
-       passenv+=(-e $var)
+       passopt+=(-e $var)
     fi
 done
+
+# If we're root, run as root inside the image, too.
+homedst=/home
+if [ $(id -u) -eq 0 ]; then
+    passopt+=(-u root)
+    homedst=/root
+fi
 
 # Run the container with the current and home directories mounted.
 docker run -it --rm --network host \
     --mount "type=bind,src=$(pwd),dst=/repo" \
-    --mount "type=bind,src=$HOME,dst=/home" \
-    "${passenv[@]}" "$SQITCH_IMAGE" "$@"
+    --mount "type=bind,src=$HOME,dst=$homedst" \
+    "${passopt[@]}" "$SQITCH_IMAGE" "$@"

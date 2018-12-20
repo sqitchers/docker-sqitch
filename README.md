@@ -21,10 +21,19 @@ Notes
     and reads configuration from the home directory almost as if it was running
     natively on the local host. It also copies over most of the environment
     variables that Sqitch cares about, for transparent configuration.
-*   By default, the Docker image runs via the user `sqitch`. If your engine
-    falls back on the system username when connecting to the database (as the
-    PostgreSQL engine does), you will likely want to set the username in sqitch
-    target URIs, or set the proper [environment variables] to fall back on.
+*   By default, the container runs as the `sqitch` user, but when executed by
+    `root`, [`docker-sqitch.sh`] runs the container as `root`. Depending on your
+    permissions, you might need to use `root` in order for sqitch to read and
+    write files. On Windows and macOS, the `sqitch` user should be fine. On
+    Linux, if you find that the container cannot access configuration files in
+    your home directory or write change scripts to the local directory, run
+    `sudo docker-sqitch.sh` to run as the root user. Just be sure to `chown`
+    files that Sqitch created for the consistency of your project.
+*   If your engine falls back on the system username when connecting to the
+    database (as the PostgreSQL engine does), you will likely want to set the
+    username in sqitch target URIs, or set the proper [environment variables] to
+    fall back on. Database authentication failures for the usernames `sqitch` or
+    `root` are the hint you'll want to look for.
 *   Custom images for [Oracle], [Snowflake], [Exasol], or [Vertica] can be built
     by downloading the appropriate binary files and using the `Dockerfiles` in
     the appropriately-named subdirectories of this repository.
