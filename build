@@ -7,6 +7,7 @@ VERSION=0.9999
 
 DIR=${DIR:=.}
 REGISTRY=${REGISTRY:="$NAME"}
+BRANCH=${TRAVIS_BRANCH:-$(git rev-parse --abbrev-ref HEAD)}
 
 # For main Sqitch build, the main tag is "latest" and there
 # is no sub-package.
@@ -20,7 +21,16 @@ if [ "$DIR" != "." ]; then
     TAG="$DIR"
 fi
 
-docker build --pull \
+# Only include the latest or directory tag when building master.
+tagopt=()
+if [ "$BRANCH" == "master" ]; then
+    tagopt+=(--tag "${REGISTRY}/${NAME}:${TAG}")
+fi
+
+# Always include the version tag.
+tagopt+=(--tag "${REGISTRY}/${NAME}:${VERSION}${PKG}")
+
+echo docker build --pull \
   --label org.opencontainers.image.created=$(date -u +"%Y-%m-%dT%H:%M:%SZ") \
   --label org.opencontainers.image.authors='Sqitch Hackers <sqitch-hackers@googlegroups.com>' \
   --label org.opencontainers.image.url="https://hub.docker.com/r/sqitch/sqitch/" \
@@ -33,8 +43,7 @@ docker build --pull \
   --label org.opencontainers.image.ref.name="sqitch${PKG}-${VERSION}" \
   --label org.opencontainers.image.title="Sqitch" \
   --label org.opencontainers.image.description="Sane database change management" \
-  --tag "${REGISTRY}/${NAME}:${TAG}" \
-  --tag "${REGISTRY}/${NAME}:${VERSION}${PKG}" \
+  "${tagopt[@]}" \
   --build-arg "VERSION=${VERSION}" \
   "$@" .
 
