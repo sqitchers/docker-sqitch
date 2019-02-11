@@ -7,7 +7,7 @@ VERSION=0.9998
 
 DIR=${DIR:=.}
 REGISTRY=${REGISTRY:="$NAME"}
-BRANCH=${TRAVIS_BRANCH:-$(git rev-parse --abbrev-ref HEAD)}
+GIT_BRANCH=${GIT_BRANCH:-${TRAVIS_BRANCH:-$(git rev-parse --abbrev-ref HEAD)}}
 
 # For main Sqitch build, the main tag is "latest" and there
 # is no sub-package.
@@ -23,7 +23,7 @@ fi
 
 # Only include the latest or directory tag when building master.
 tagopt=()
-if [ "$BRANCH" == "master" ]; then
+if [ "$GIT_BRANCH" == "master" ]; then
     tagopt+=(--tag "${REGISTRY}/${NAME}:${TAG}")
 fi
 
