@@ -23,7 +23,7 @@ fi
 
 # Only include the latest or directory tag when building master.
 tagopt=()
-if [ "$GIT_BRANCH" == "master" ]; then
+if [[ "$GIT_BRANCH" =~ (^|/)master$ ]]; then
     tagopt+=(--tag "${REGISTRY}/${NAME}:${TAG}")
 fi
 
