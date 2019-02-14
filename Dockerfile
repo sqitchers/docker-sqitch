@@ -20,6 +20,12 @@ RUN curl -sL --compressed https://git.io/cpm > cpm && chmod +x cpm \
 
 # Build, test, bundle, prune.
 WORKDIR /work/src
+
+# XXX remove this workaround once v1.0.0 is released.
+RUN perl -i -pe 's/((\s+)"IPC::Run3")/$2"IO::Pager" : "0.34",\n$1/' META.json \
+    && perl -i -pe 's/((\s+)IPC::Run3)/${2}IO::Pager: '"'"'0.34'"'"'\n$1/' META.yml \
+    && perl -i -pe 's/((\s+)"IPC::Run3")/$2"IO::Pager" => "0.34",\n$1/' Build.PL
+
 RUN perl Build.PL --quiet --install_base /app --etcdir /etc/sqitch \
     --config installman1dir= --config installsiteman1dir= --config installman3dir= --config installsiteman3dir= \
     --with sqlite --with postgres --with firebird --with odbc \
