@@ -3,22 +3,22 @@
 # Determine which Docker image to run.
 SQITCH_IMAGE=${SQITCH_IMAGE:=sqitch/sqitch:latest}
 
-# Figure out who I am.
-user=${USER-$(whoami)}
-if [ "Darwin" = $(uname) ]; then
-    fullname=$(id -P $user | awk -F '[:]' '{print $8}')
-else
-    fullname=$(getent passwd $user | cut -d: -f5 | cut -d, -f1)
-fi
-
 # Set up required pass-through variables.
+user=${USER-$(whoami)}
 passopt=(
     -e "SQITCH_ORIG_SYSUSER=$user"
-    -e "SQITCH_ORIG_FULLNAME=$fullname"
     -e "SQITCH_ORIG_EMAIL=$user@$(hostname)"
     -e "TZ=$(date +%Z)" \
     -e "LESS=${LESS:--R}" \
 )
+
+# Handle OS-specific options.
+if [ "Darwin" = $(uname) ]; then
+    passopt+=(-e "SQITCH_ORIG_FULLNAME=$(id -P $user | awk -F '[:]' '{print $8}')")
+else
+    passopt+=(-e "SQITCH_ORIG_FULLNAME=$(getent passwd $user | cut -d: -f5 | cut -d, -f1)")
+    passopt+=(-u $(id -u ${USER}):$(id -g ${USER}))
+fi
 
 # Iterate over optional Sqitch and engine variables.
 for var in \
@@ -36,10 +36,9 @@ do
     fi
 done
 
-# If we're root, run as root inside the image, too.
+# Determine the name of the container home directory.
 homedst=/home
 if [ $(id -u) -eq 0 ]; then
-    passopt+=(-u root)
     homedst=/root
 fi
 
