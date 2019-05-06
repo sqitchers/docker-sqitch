@@ -17,7 +17,7 @@ if [ "Darwin" = $(uname) ]; then
     passopt+=(-e "SQITCH_ORIG_FULLNAME=$(id -P $user | awk -F '[:]' '{print $8}')")
 else
     passopt+=(-e "SQITCH_ORIG_FULLNAME=$(getent passwd $user | cut -d: -f5 | cut -d, -f1)")
-    passopt+=(-u $(id -u ${USER}):$(id -g ${USER}))
+    passopt+=(-u $(id -u ${user}):$(id -g ${user}))
 fi
 
 # Iterate over optional Sqitch and engine variables.
