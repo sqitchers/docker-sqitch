@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 # Determine which Docker image to run.
 SQITCH_IMAGE=${SQITCH_IMAGE:=sqitch/sqitch:latest}
@@ -13,12 +13,22 @@ passopt=(
 )
 
 # Handle OS-specific options.
-if [ "Darwin" = $(uname) ]; then
-    passopt+=(-e "SQITCH_ORIG_FULLNAME=$(id -P $user | awk -F '[:]' '{print $8}')")
-else
-    passopt+=(-e "SQITCH_ORIG_FULLNAME=$(getent passwd $user | cut -d: -f5 | cut -d, -f1)")
-    passopt+=(-u $(id -u ${user}):$(id -g ${user}))
-fi
+case "$(uname -s)" in
+    Linux*)
+        passopt+=(-e "SQITCH_ORIG_FULLNAME=$(getent passwd $user | cut -d: -f5 | cut -d, -f1)")
+        passopt+=(-u $(id -u ${user}):$(id -g ${user}))
+        ;;
+    Darwin*)
+        passopt+=(-e "SQITCH_ORIG_FULLNAME=$(id -P $user | awk -F '[:]' '{print $8}')")
+        ;;
+    MINGW*|CYGWIN*)
+        passopt+=(-e "SQITCH_ORIG_FULLNAME=$(net user $user)")
+        ;;
+    *)
+        echo "Unknown OS: $(uname -s)"
+        exit 2
+        ;;
+esac
 
 # Iterate over optional Sqitch and engine variables.
 for var in \
@@ -38,7 +48,7 @@ done
 
 # Determine the name of the container home directory.
 homedst=/home
-if [ $(id -u) -eq 0 ]; then
+if [ $(id -u ${user}) -eq 0 ]; then
     homedst=/root
 fi
 
