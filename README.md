@@ -43,6 +43,11 @@ Notes
     interface always provides menus to make it easy to figure out how to use it.
     If you need another editor, this image isn't for you, but you can create
     one based on this image and add whatever editors you like.
+*   If you are running a database server on the sqitch container host and you want to 
+    deploy changes to it, you have to indicate the container where to find the socket
+    to connect to. Locate the socket in your host, and mount the folder the folder that
+    contains it to the container's `/var/run/mysqld` folder. This was tested in Ubuntu 18.04
+    and MySQL 5.7.
 
   [Sqitch Project]: https://sqitch.org
   [stable Debian slim]: https://docs.docker.com/samples/library/debian/#debiansuite-slim
