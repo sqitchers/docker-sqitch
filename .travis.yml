@@ -2,11 +2,9 @@ language: bash
 services: docker
 
 script:
-  - ./build
-
 # DOCKER_USER and $DOCKER_PASS are set in the Travis settings for the project.
-after_success:
   - echo "$DOCKER_PASS" | docker login -u "$DOCKER_USER" --password-stdin
+  - ./build
   - \[ "$TRAVIS_PULL_REQUEST" == "false" ] &&  docker push sqitch/sqitch
 
 after_script:
