@@ -23,7 +23,7 @@ ARG sf_account
 RUN apt-get -qq update \
     && apt-get -qq --no-install-recommends install odbcinst \
     # Configure ODBC. https://docs.snowflake.net/manuals/user-guide/odbc-linux.html
-    && gunzip *.tgz && tar xf *.tar  \
+    && gunzip -f *.tgz && tar xf *.tar  \
     && mkdir odbc \
     && mv snowflake_odbc/lib snowflake_odbc/ErrorMessages odbc/ \
     && mv simba.snowflake.ini odbc/lib/ \
