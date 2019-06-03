@@ -1,22 +1,21 @@
 Sqitch Snowflake Docker Image
 =============================
 
-1.  Download the [SnowSQL installer] for x86_64 Linux to this directory. Its
-    name should match this pattern: `snowsql-{VERSION}-linux_x86_64.bash`.
+Build an image named `sqitch-snowsql` with this command from the root directory
+of this project, replacing `$ACCOUNT` with your organization's Snowflake account
+name:
 
-2.  Download the [ODBC driver] 64-bit TGZ for Linux to this directory. Its
-    name should match this pattern: `snowflake_linux_x8664_odbc-{VERSION}.tgz`.
+    env DIR=snowflake ./build --build-arg sf_account=$ACCOUNT
 
-3.  Build an image named `sqitch-snowsql` with this command from the root
-    directory of this project, replacing `$ACCOUNT` with your organization's
-    Snowflake account name:
+The build will download the [SnowSQL installer] and [ODBC driver] from public
+repositories; if there are errors, check that the version number are correct
+in the [client changes].
 
-        env DIR=snowflake ./build --build-arg sf_account=$ACCOUNT
+If the resulting image will be pushed to a private Docker registry, set the
+`$REGISTRY` environment variable:
 
-    If the resulting image will be pushed to a private Docker registry,
-    set the `$REGISTRY` environment variable:
+    env DIR=snowflake REGISTRY=registry.example.com/sqitch ./build --build-arg sf_account=$ACCOUNT
 
-        env DIR=snowflake REGISTRY=registry.example.com/sqitch ./build --build-arg sf_account=$ACCOUNT
-
-[SnowSQL installer]: https://docs.snowflake.net/manuals/user-guide/snowsql-install-config.html
-[ODBC driver]: https://docs.snowflake.net/manuals/user-guide/odbc-download.html
+  [SnowSQL installer]: https://docs.snowflake.net/manuals/user-guide/snowsql-install-config.html
+  [ODBC driver]: https://docs.snowflake.net/manuals/user-guide/odbc-download.html
+  [client changes]: https://docs.snowflake.net/manuals/release-notes/client-change-log.html

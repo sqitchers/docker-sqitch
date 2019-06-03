@@ -1,7 +1,14 @@
 FROM debian:stable-slim AS snow-build
 
 WORKDIR /work
-COPY *.tgz *.bash conf ./
+
+# Download the ODBC driver and SnowSQL.
+# https://docs.snowflake.net/manuals/user-guide/snowsql-install-config.html#downloading-the-snowsql-installer
+# https://docs.snowflake.net/manuals/release-notes/client-change-log-snowsql.html
+ADD https://sfc-snowsql-updates.s3.us-west-2.amazonaws.com/bootstrap/1.1/linux_x86_64/snowsql-1.1.79-linux_x86_64.bash snowsql.bash
+# https://sfc-repo.snowflakecomputing.com/index.html
+ADD https://sfc-repo.snowflakecomputing.com/odbc/linux/2.13.19/snowflake_linux_x8664_odbc-2.13.19.tgz snowflake_odbc.tgz
+RUN ls -lah
 
 # Tell SnowSQL where to store its versions and config. Need to keep it inside
 # the image so it doesn't try to load the version from $HOME, which will
@@ -24,7 +31,7 @@ RUN apt-get -qq update \
     && cat odbc.ini >> /etc/odbc.ini \
     && cat odbcinst.ini >> /etc/odbcinst.ini \
     # Unpack and upgrade snowsql, then overwrite its config file.
-    && sed -e '1,/^exit$/d' snowsql-*-linux_x86_64.bash | tar zxf - \
+    && sed -e '1,/^exit$/d' snowsql.bash | tar zxf - \
     && ./snowsql -Uv \
     && echo "[connections]\naccountname = $sf_account\n\n[options]\nnoup = true" > /var/snowsql/.snowsql/config
 
