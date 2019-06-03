@@ -25,5 +25,5 @@ Sqitch Oracle Docker Image
     machine to `/home` in the container, letting it find `tnsnames.ora` and
     Sqitch configuration files.
 
-[Instant Client] https://www.oracle.com/technetwork/topics/linuxx86-64soft-092277.html
-[`tnsnames.ora` file]: https://orafaq.com/wiki/Tnsnames.ora
+  [Instant Client] https://www.oracle.com/technetwork/topics/linuxx86-64soft-092277.html
+  [`tnsnames.ora` file]: https://orafaq.com/wiki/Tnsnames.ora
