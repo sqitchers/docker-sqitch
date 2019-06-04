@@ -3,7 +3,7 @@
 set -e
 
 NAME=sqitch
-VERSION=0.9999
+VERSION=1.0.0
 
 DIR=${DIR:=.}
 REGISTRY=${REGISTRY:="$NAME"}

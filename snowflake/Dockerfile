@@ -44,8 +44,6 @@ RUN apt-get -qq update \
     && apt-get clean \
     && rm -rf /var/cache/apt/* /var/lib/apt/lists/* \
     && rm -rf /man /usr/share/man /usr/share/doc \
-    # XXX Workaround for Snowflake missing table error code fixed in v1.0.0.
-    && perl -i -pe 's/02000/42S02/' /lib/perl5/App/Sqitch/Engine/snowflake.pm \
     && mkdir -p /usr/lib/snowflake/odbc/log \
     && printf '#!/bin/sh\n/var/snowsql --config /home/.snowsql/config "$@"\n' > /bin/snowsql \
     && chmod +x /bin/snowsql

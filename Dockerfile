@@ -7,9 +7,9 @@ RUN mkdir -p /usr/share/man/man1 /usr/share/man/man7 \
     && apt-get -qq update \
     && apt-get -qq install build-essential perl curl \
        unixodbc-dev firebird-dev sqlite libpq-dev libmariadbclient-dev \
-    && curl -LO https://www.cpan.org/authors/id/D/DW/DWHEELER/App-Sqitch-$VERSION.tar.gz \
+    && curl -LO https://www.cpan.org/authors/id/D/DW/DWHEELER/App-Sqitch-v$VERSION.tar.gz \
     && mkdir src \
-    && tar -zxf App-Sqitch-$VERSION.tar.gz --strip-components 1 -C src
+    && tar -zxf App-Sqitch-v$VERSION.tar.gz --strip-components 1 -C src
 
 # Install cpan and build dependencies.
 ENV PERL5LIB /work/local/lib/perl5
@@ -20,11 +20,6 @@ RUN curl -sL --compressed https://git.io/cpm > cpm && chmod +x cpm \
 
 # Build, test, bundle, prune.
 WORKDIR /work/src
-
-# XXX remove this workaround once v1.0.0 is released.
-RUN perl -i -pe 's/((\s+)"IPC::Run3")/$2"IO::Pager" : "0.34",\n$1/' META.json \
-    && perl -i -pe 's/((\s+)IPC::Run3)/${2}IO::Pager: '"'"'0.34'"'"'\n$1/' META.yml \
-    && perl -i -pe 's/((\s+)"IPC::Run3")/$2"IO::Pager" => "0.34",\n$1/' Build.PL
 
 RUN perl Build.PL --quiet --install_base /app --etcdir /etc/sqitch \
     --config installman1dir= --config installsiteman1dir= --config installman3dir= --config installsiteman3dir= \
