@@ -51,6 +51,8 @@ homedst=/home
 if [ $(id -u ${user}) -eq 0 ]; then
     homedst=/root
 fi
+# Set HOME, since the user ID likely won't be the same as for the sqitch user.
+passopt+=(-e "HOME=${homedst}")
 
 # Run the container with the current and home directories mounted.
 docker run -it --rm --network host \
