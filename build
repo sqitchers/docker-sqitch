@@ -46,4 +46,3 @@ docker build --pull \
   "${tagopt[@]}" \
   --build-arg "VERSION=${VERSION}" \
   "$@" .
-
