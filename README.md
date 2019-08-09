@@ -21,12 +21,13 @@ Notes
     and reads configuration from the home directory almost as if it was running
     natively on the local host. It also copies over most of the environment
     variables that Sqitch cares about, for transparent configuration.
-*   By default, the container runs as the `sqitch` user, but when executed by
-    `root`, [`docker-sqitch.sh`] runs the container as `root`. Depending on your
-    permissions, you might need to use `root` in order for sqitch to read and
-    write files. On Windows and macOS, the `sqitch` user should be fine. On
-    Linux, if you find that the container cannot access configuration files in
-    your home directory or write change scripts to the local directory, run
+*   By default, the container runs as the `sqitch` user. On macOS and Windows
+    this works well, as files created by Sqitch in the working directory on the
+    host will be properly owned by the host user. On Linux, however,
+    [`docker-sqitch.sh`] runs the container with the UID and GID of the current
+    host user, again so that files created by Sqitch will be owned by that user.
+    If you find that the container cannot access configuration files in your
+    home directory or write change scripts to the local directory, run
     `sudo docker-sqitch.sh` to run as the root user. Just be sure to `chown`
     files that Sqitch created for the consistency of your project.
 *   If your engine falls back on the system username when connecting to the
@@ -34,8 +35,16 @@ Notes
     username in sqitch target URIs, or set the proper [environment variables] to
     fall back on. Database authentication failures for the usernames `sqitch` or
     `root` are the hint you'll want to look for.
+*   If you need to connect to a database server on your local host (or running
+    in a container with the listening port mapped to the local host), use the
+    host name `host.docker.internal` instead of `localhost`. Connections should
+    work transparently when running Docker on Windows or macOS, although not yet
+    on Linux (watch [this PR](https://github.com/docker/libnetwork/pull/2348)
+    for it to land). In the meantime you can [use a NAT gateway
+    container](https://github.com/qoomon/docker-host) to forward traffic to the
+    Docker host.
 *   Custom images for [Oracle], [Snowflake], [Exasol], or [Vertica] can be built
-    by downloading the appropriate binary files and using the `Dockerfiles` in
+    by downloading the appropriate binary files and using the `Dockerfile`s in
     the appropriately-named subdirectories of this repository.
 *   In an effort to keep things as simple as possible, the only editor included
     and configured for use in the image is [nano]. This is a very simple, tiny
