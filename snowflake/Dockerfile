@@ -5,9 +5,9 @@ WORKDIR /work
 # Download the ODBC driver and SnowSQL.
 # https://docs.snowflake.net/manuals/user-guide/snowsql-install-config.html#downloading-the-snowsql-installer
 # https://docs.snowflake.net/manuals/release-notes/client-change-log-snowsql.html
-ADD https://sfc-snowsql-updates.s3.us-west-2.amazonaws.com/bootstrap/1.1/linux_x86_64/snowsql-1.1.81-linux_x86_64.bash snowsql.bash
+ADD https://sfc-snowsql-updates.s3.us-west-2.amazonaws.com/bootstrap/1.1/linux_x86_64/snowsql-1.1.82-linux_x86_64.bash snowsql.bash
 # https://sfc-repo.snowflakecomputing.com/index.html
-ADD https://sfc-repo.snowflakecomputing.com/odbc/linux/2.19.5/snowflake_linux_x8664_odbc-2.19.5.tgz snowflake_linux_x8664_odbc.tgz
+ADD https://sfc-repo.snowflakecomputing.com/odbc/linux/2.19.10/snowflake_linux_x8664_odbc-2.19.10.tgz snowflake_linux_x8664_odbc.tgz
 COPY conf ./
 
 # Tell SnowSQL where to store its versions and config. Need to keep it inside
@@ -48,7 +48,7 @@ RUN apt-get -qq update \
     && printf '#!/bin/sh\n/var/snowsql --config /home/.snowsql/config "$@"\n' > /bin/snowsql \
     && chmod +x /bin/snowsql
 
-# Install SnowSQL plus the ODDB driver and config.
+# Install SnowSQL plus the ODBC driver and config.
 COPY --from=snow-build /work/snowsql /var/
 COPY --from=snow-build --chown=sqitch:sqitch /var/snowsql /var/
 COPY --from=snow-build /work/odbc /usr/lib/snowflake/odbc/
