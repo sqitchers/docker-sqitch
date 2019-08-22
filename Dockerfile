@@ -36,7 +36,7 @@ FROM debian:stable-slim AS sqitch
 # Install runtime system dependencies and remove unnecesary files.
 RUN mkdir -p /usr/share/man/man1 /usr/share/man/man7 \
     && apt-get -qq update \
-    && apt-get -qq --no-install-recommends install less libperl5.28 perl-doc nano \
+    && apt-get -qq --no-install-recommends install less libperl5.28 perl-doc nano ca-certificates \
        sqlite3 \
        firebird3.0-utils libfbclient2 \
        libpq5 postgresql-client \
@@ -44,6 +44,8 @@ RUN mkdir -p /usr/share/man/man1 /usr/share/man/man7 \
     && apt-cache pkgnames | grep python | xargs apt-get purge -qq \
     && apt-cache pkgnames | grep libmagic | xargs apt-get purge -qq \
     && apt-get clean \
+    # Let libcurl find certs. https://stackoverflow.com/q/3160909/79202
+    && mkdir -p /etc/pki/tls && ln -s /etc/ssl/certs /etc/pki/tls/ \
     && rm -rf /var/cache/apt/* /var/lib/apt/lists/* /usr/bin/mysql?* \
     && rm -rf /plibs /man /usr/share/man /usr/share/doc /usr/share/postgresql \
         /usr/share/nano /etc/nanorc \
