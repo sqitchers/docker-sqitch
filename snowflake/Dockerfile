@@ -44,12 +44,10 @@ RUN apt-get -qq update \
     && apt-get clean \
     && rm -rf /var/cache/apt/* /var/lib/apt/lists/* \
     && rm -rf /man /usr/share/man /usr/share/doc \
-    && mkdir -p /usr/lib/snowflake/odbc/log \
-    && printf '#!/bin/sh\n/var/snowsql --config /home/.snowsql/config "$@"\n' > /bin/snowsql \
-    && chmod +x /bin/snowsql
+    && mkdir -p /usr/lib/snowflake/odbc/log
 
 # Install SnowSQL plus the ODBC driver and config.
-COPY --from=snow-build /work/snowsql /var/
+COPY --from=snow-build /work/snowsql /bin/
 COPY --from=snow-build --chown=sqitch:sqitch /var/snowsql /var/
 COPY --from=snow-build /work/odbc /usr/lib/snowflake/odbc/
 COPY --from=snow-build /etc/odbc* /etc/
