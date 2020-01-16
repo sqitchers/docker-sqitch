@@ -22,7 +22,7 @@ FROM sqitch/sqitch:latest
 USER root
 RUN apt-get -qq update \
     && mkdir -p /usr/share/man/man1 \
-    && apt-get -qq --no-install-recommends install unixodbc openjdk-8-jre-headless \
+    && apt-get -qq --no-install-recommends install unixodbc openjdk-11-jre-headless \
     && apt-get clean \
     && rm -rf /var/cache/apt/* /var/lib/apt/lists/* \
     && rm -rf /man /usr/share/man /usr/share/doc \
