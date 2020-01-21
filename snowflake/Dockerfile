@@ -5,8 +5,10 @@ WORKDIR /work
 # Download the ODBC driver and SnowSQL.
 # https://docs.snowflake.net/manuals/user-guide/snowsql-install-config.html#downloading-the-snowsql-installer
 # https://docs.snowflake.net/manuals/release-notes/client-change-log-snowsql.html
-ADD https://sfc-repo.snowflakecomputing.com/snowsql/bootstrap/1.2/linux_x86_64/snowsql-1.2.2-linux_x86_64.bash snowsql.bash
 # https://sfc-repo.snowflakecomputing.com/index.html
+# Stay on 1.1 for now: https://stackoverflow.com/q/59724399/79202, Case#00092538.
+ADD https://sfc-snowsql-updates.s3.us-west-2.amazonaws.com/bootstrap/1.1/linux_x86_64/snowsql-1.1.86-linux_x86_64.bash snowsql.bash
+# ADD https://sfc-repo.snowflakecomputing.com/snowsql/bootstrap/1.2/linux_x86_64/snowsql-1.2.2-linux_x86_64.bash snowsql.bash
 ADD https://sfc-repo.snowflakecomputing.com/odbc/linux/2.20.3/snowflake_linux_x8664_odbc-2.20.3.tgz snowflake_linux_x8664_odbc.tgz
 COPY conf ./
 
