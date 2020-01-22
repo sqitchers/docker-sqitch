@@ -53,7 +53,8 @@ RUN mkdir -p /usr/share/man/man1 /usr/share/man/man7 \
     && find / -name '*.ph' -delete \
     && find / -name '*.h' -delete \
     && groupadd -r sqitch --gid=1024 \
-    && useradd -r -g sqitch --uid=1024 -d /home sqitch
+    && useradd -r -g sqitch --uid=1024 -d /home sqitch \
+    && chown -R sqitch:sqitch /home
 
 # Copy the app and config from the build image.
 COPY --from=sqitch-build /app .
