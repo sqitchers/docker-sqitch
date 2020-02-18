@@ -6,10 +6,8 @@ WORKDIR /work
 # https://docs.snowflake.net/manuals/user-guide/snowsql-install-config.html#downloading-the-snowsql-installer
 # https://docs.snowflake.net/manuals/release-notes/client-change-log-snowsql.html
 # https://sfc-repo.snowflakecomputing.com/index.html
-# Stay on 1.1 for now: https://stackoverflow.com/q/59724399/79202, Case#00092538.
-ADD https://sfc-snowsql-updates.s3.us-west-2.amazonaws.com/bootstrap/1.1/linux_x86_64/snowsql-1.1.86-linux_x86_64.bash snowsql.bash
-# ADD https://sfc-repo.snowflakecomputing.com/snowsql/bootstrap/1.2/linux_x86_64/snowsql-1.2.2-linux_x86_64.bash snowsql.bash
-ADD https://sfc-repo.snowflakecomputing.com/odbc/linux/2.20.3/snowflake_linux_x8664_odbc-2.20.3.tgz snowflake_linux_x8664_odbc.tgz
+ADD https://sfc-repo.snowflakecomputing.com/snowsql/bootstrap/1.2/linux_x86_64/snowsql-1.2.4-linux_x86_64.bash snowsql.bash
+ADD https://sfc-repo.snowflakecomputing.com/odbc/linux/2.20.4/snowflake_linux_x8664_odbc-2.20.4.tgz snowflake_linux_x8664_odbc.tgz
 COPY conf ./
 
 # Tell SnowSQL where to store its versions and config. Need to keep it inside
@@ -33,7 +31,8 @@ RUN apt-get -qq update \
     && cat odbc.ini >> /etc/odbc.ini \
     && cat odbcinst.ini >> /etc/odbcinst.ini \
     # Unpack and upgrade snowsql, then overwrite its config file.
-    && SNOWSQL_DEST=. SNOWSQL_LOGIN_SHELL=/dev/null bash snowsql.bash \
+    # && SNOWSQL_DEST=. SNOWSQL_LOGIN_SHELL=/dev/null bash snowsql.bash \
+    && sed -e '1,/^exit$/d' snowsql.bash | tar zxf - \
     && ./snowsql -Uv \
     && echo "[connections]\naccountname = $sf_account\n\n[options]\nnoup = true" > /var/snowsql/.snowsql/config
 
