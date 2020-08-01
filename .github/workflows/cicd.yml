@@ -8,12 +8,6 @@ on:
     - cron: '0 10 25 * *' # Monthly at 10am on the 25th
 jobs:
   build:
-    name: Build Image
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-      - run: ./build
-  build:
     name: Build and Push to Docker Hub
     runs-on: ubuntu-latest
     steps:
