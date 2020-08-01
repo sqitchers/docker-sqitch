@@ -5,7 +5,7 @@ script:
   - ./build
   # DOCKER_USER and $DOCKER_PASS are set in the Travis settings for the project.
   - echo "$DOCKER_PASS" | docker login -u "$DOCKER_USER" --password-stdin
-  - 'if [[ ( "$TRAVIS_PULL_REQUEST" == "false" ) && ( "$TRAVIS_BRANCH" == "master" || ${TRAVIS_BRANCH:0:1} == "v" ) ]]; then docker push sqitch/sqitch; fi'
+  - 'if [[ ( "$TRAVIS_PULL_REQUEST" == "false" ) && ( "$TRAVIS_BRANCH" == "main" || ${TRAVIS_BRANCH:0:1} == "v" ) ]]; then docker push sqitch/sqitch; fi'
 
 after_script:
   - docker images
