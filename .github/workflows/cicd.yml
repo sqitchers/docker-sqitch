@@ -13,14 +13,16 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - run: ./build
-  publish:
-    name: Push to Docker Hub
-    # Publish v0.9998 when the build job succeeds and it's not a pull request.
-    needs: build
-    if: github.ref == 'refs/heads/v0.9998' && github.event_name != 'pull_request' && needs.build.result == 'success'
+  build:
+    name: Build and Push to Docker Hub
     runs-on: ubuntu-latest
     steps:
+      - name: Check out the repo
+        uses: actions/checkout@v2
+      - name: Build the Image
+        run: ./build
       - name: Log in to Docker Hub
         run: echo ${{ secrets.DOCKER_PASSWORD }} | docker login -u ${{ secrets.DOCKER_USERNAME }} --password-stdin
       - name: Push the Image
+        if: github.ref == 'refs/heads/v0.9998' && github.event_name != 'pull_request'
         run: docker push sqitch/sqitch
