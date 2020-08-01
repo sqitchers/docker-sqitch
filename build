@@ -21,9 +21,9 @@ if [ "$DIR" != "." ]; then
     TAG="$DIR"
 fi
 
-# Only include the latest or directory tag when building master.
+# Only include the latest or directory tag when building main.
 tagopt=()
-if [ "$GIT_BRANCH" == "master" ]; then
+if [[ "$GIT_BRANCH" =~ (^|/)main$ ]]; then
     tagopt+=(--tag "${REGISTRY}/${NAME}:${TAG}")
 fi
 
