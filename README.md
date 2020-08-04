@@ -2,7 +2,7 @@ Sqitch Docker Packaging
 =======================
 
     docker pull sqitch/sqitch
-    curl -L https://git.io/fAX6Z -o sqitch && chmod +x sqitch
+    curl -L https://git.io/JJKCn -o sqitch && chmod +x sqitch
     ./sqitch help
 
 This project is the source for creating the official [Sqitch Project] Docker
@@ -60,7 +60,7 @@ Notes
   [MariaDB]: https://mariadb.com/
   [MySQL]: https://mysql.com/
   [Firebird]: https://www.firebirdsql.org
-  [`docker-sqitch.sh`]: https://git.io/fAX6Z
+  [`docker-sqitch.sh`]: https://git.io/JJKCn
   [environment variables]: http://metacpan.org/pod/sqitch-environment
   [Oracle]: https://www.oracle.com/database/
   [Snowflake]:https://www.snowflake.com
