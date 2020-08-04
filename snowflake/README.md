@@ -26,7 +26,7 @@ To use this image with the [`docker-sqitch.sh`] shell script, set the
 `$SQITCH_IMAGE` environment variable to the container tag it should use, e.g.,
 
 ``` sh
-curl -L https://git.io/fAX6Z -o sqitch && chmod +x sqitch
+curl -L https://git.io/JJKCn -o sqitch && chmod +x sqitch
 env SQITCH_IMAGE=sqitch/sqitch:snowflake ./sqitch
 ```
 
@@ -39,4 +39,4 @@ env SQITCH_IMAGE=registry.example.com/sqitch:snowflake ./sqitch
   [SnowSQL installer]: https://docs.snowflake.net/manuals/user-guide/snowsql-install-config.html
   [ODBC driver]: https://docs.snowflake.net/manuals/user-guide/odbc-download.html
   [client changes]: https://docs.snowflake.net/manuals/release-notes/client-change-log.html
-  [`docker-sqitch.sh`]: https://git.io/fAX6Z
+  [`docker-sqitch.sh`]: https://git.io/JJKCn
