@@ -1,5 +1,5 @@
-echo off
-
+@echo off & setlocal EnableDelayedExpansion
+setlocal
 @REM # Determine which Docker image to run.
 if "%SQITCH_IMAGE%"=="" (
     set SQITCH_IMAGE=sqitch/sqitch:latest
@@ -9,10 +9,15 @@ echo %SQITCH_IMAGE%
 
 @REM # Set up required pass-through variables.
 @REM set user=whoami
-FOR /F "tokens=*" %%g IN ('whoami') do (SET user=%%g)
-echo %user%
-echo end
-@REM ${USER-$(whoami)}
+REM FOR /F "tokens=*" %%g IN ('whoami') do (SET user=%%g)
+REM echo %user%
+set passopt= -e "SQITCH_ORIG_SYSUSER=%username%"
+FOR /F "tokens=*" %%g IN ('hostname') do (SET machinehostname=%%g)
+set passopt=%passopt% -e "SQITCH_ORIG_EMAIL=%username%@%machinehostname%"
+FOR /F "tokens=*" %%g IN ('tzutil /g') do (SET TZ=%%g)
+set passopt=%passopt% -e "TZ=%TZ%"
+
+echo %passopt% 
 @REM passopt=(
 @REM     -e "SQITCH_ORIG_SYSUSER=$user"
 @REM     -e "SQITCH_ORIG_EMAIL=$user@$(hostname)"
@@ -67,3 +72,6 @@ echo end
 @REM     --mount "type=bind,src=$(pwd),dst=/repo" \
 @REM     --mount "type=bind,src=$HOME,dst=$homedst" \
 @REM     "${passopt[@]}" "$SQITCH_IMAGE" "$@"
+
+echo end
+endlocal
