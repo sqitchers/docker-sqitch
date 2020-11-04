@@ -1,30 +1,22 @@
 @echo off & setlocal enableextensions enabledelayedexpansion
-REM echo ::: step1 ::::
-REM echo %*
 REM # Determine which Docker image to run.
 IF NOT DEFINED SQITCH_IMAGE (
     set SQITCH_IMAGE=sqitch/sqitch:latest
 ) 
-echo %SQITCH_IMAGE%
 REM set SQITCH_IMAGE=sqitch/sqitch:latest
 
 REM # Set up required pass-through variables.
-REM set user=whoami
-REM echo ::: step1 ::::
 FOR /F "tokens=*" %%g IN ('whoami') do (SET user=%%g)
-set passopt= -e "SQITCH_ORIG_SYSUSER=%username%"
+set passopt= -e SQITCH_ORIG_SYSUSER=%username%
 FOR /F "tokens=*" %%g IN ('hostname') do (SET machinehostname=%%g)
-set passopt=%passopt% -e "SQITCH_ORIG_EMAIL=%username%@%machinehostname%"
+set passopt=%passopt% -e SQITCH_ORIG_EMAIL=%username%@%machinehostname%
 FOR /F "tokens=*" %%g IN ('tzutil /g') do (SET TZ=%%g)
-set passopt=%passopt% -e "TZ=%TZ%"
+set passopt=%passopt% -e TZ="%TZ%"
 if NOT DEFINED LESS (
-    set LESS=--R
+    set LESS=-R
 )
-REM if "%LESS%"=="" (
+set passopt=%passopt% -e LESS=%LESS%
 
-set passopt=%passopt% -e "LESS=%LESS%"
-
-echo %passopt% 
 
 for %%i in (
     SQITCH_CONFIG SQITCH_USERNAME SQITCH_PASSWORD SQITCH_FULLNAME SQITCH_EMAIL SQITCH_TARGET
@@ -46,16 +38,15 @@ REM if [ $(id -u ${user}) -eq 0 ]; then
 REM     homedst=/root
 REM fi
 REM # Set HOME, since the user ID likely won't be the same as for the sqitch user.
-set passopt=%passopt% -e "HOME=%homedst%"
+set passopt=%passopt% -e HOME=%homedst%
 
 echo %passopt% 
 
 REM # Run the container with the current and home directories mounted.
 @echo on
 docker run -it --rm --network host ^
-    --mount "type=bind,src=%UserProfile%,dst=\repo" ^
-    --mount "type=bind,src=%UserProfile%,dst=%homedst%" ^
-    %passopt% -d %SQITCH_IMAGE% %*
+    --mount type=bind,src=%UserProfile%,dst=/repo ^
+    --mount type=bind,src=%UserProfile%,dst=%homedst% ^
+    %passopt% %SQITCH_IMAGE% %*
 
-echo end
-endlocal
+@endlocal
