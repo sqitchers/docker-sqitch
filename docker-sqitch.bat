@@ -9,7 +9,7 @@ REM set SQITCH_IMAGE=sqitch/sqitch:latest
 
 REM # Set up required pass-through variables.
 REM set user=whoami
-echo ::: step1 ::::
+REM echo ::: step1 ::::
 FOR /F "tokens=*" %%g IN ('whoami') do (SET user=%%g)
 set passopt= -e "SQITCH_ORIG_SYSUSER=%username%"
 FOR /F "tokens=*" %%g IN ('hostname') do (SET machinehostname=%%g)
@@ -50,9 +50,10 @@ set passopt=%passopt% -e "HOME=%homedst%"
 echo %passopt% 
 
 REM # Run the container with the current and home directories mounted.
-docker run -it --rm --network host \
-    --mount "type=bind,src=%UserProfile%,dst=\repo" \
-    --mount "type=bind,src=%HOME%,dst=%homedst%" \
+@echo on
+docker run -it --rm --network host ^
+    --mount "type=bind,src=%UserProfile%,dst=\repo" ^
+    --mount "type=bind,src=%HOME%,dst=%homedst%" ^
     "%passopt%" "%SQITCH_IMAGE%"
 
 echo end
