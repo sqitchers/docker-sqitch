@@ -11,12 +11,19 @@
     ./sqitch help
 ```
 
-### windows:[git bash](https://gitforwindows.org/)
+### windows
 
+* [git bash](https://gitforwindows.org/)
 ```sh
 docker pull sqitch/sqitch
 curl -L https://git.io/JJKCn -o sqitch
 sh sqitch help
+```
+* cmd
+```bat
+docker pull sqitch/sqitch
+curl -L https://raw.githubusercontent.com/sqitchers/docker-sqitch/main/docker-sqitch.bat -o sqitch.bat
+sqitch.bat help
 ```
 
 ## Description
