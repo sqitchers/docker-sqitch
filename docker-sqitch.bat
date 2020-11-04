@@ -1,5 +1,6 @@
 @echo off & setlocal enableextensions enabledelayedexpansion
-
+REM echo ::: step1 ::::
+REM echo %*
 REM # Determine which Docker image to run.
 IF NOT DEFINED SQITCH_IMAGE (
     set SQITCH_IMAGE=sqitch/sqitch:latest
@@ -54,7 +55,7 @@ REM # Run the container with the current and home directories mounted.
 docker run -it --rm --network host ^
     --mount "type=bind,src=%UserProfile%,dst=\repo" ^
     --mount "type=bind,src=%UserProfile%,dst=%homedst%" ^
-    %passopt% -d %SQITCH_IMAGE%
+    %passopt% -d %SQITCH_IMAGE% %*
 
 echo end
 endlocal
