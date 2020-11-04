@@ -1,29 +1,23 @@
-# Sqitch Docker Packaging
+Sqitch Docker Packaging
 =======================
 
 ## Setup
 
-### linux,mac
+### linux,mac,windows:[git bash](https://gitforwindows.org/)
 
 ```sh
-    docker pull sqitch/sqitch
-    curl -L https://git.io/JJKCn -o sqitch && chmod +x sqitch
-    ./sqitch help
+docker pull sqitch/sqitch
+curl -L https://git.io/JJKCn -o sqitch && chmod +x sqitch
+./sqitch help
 ```
 
 ### windows
 
-* [git bash](https://gitforwindows.org/)
-```sh
-docker pull sqitch/sqitch
-curl -L https://git.io/JJKCn -o sqitch
-sh sqitch help
-```
-* cmd **WORKS BETTER** on windows
+* cmd
 ```bat
 docker pull sqitch/sqitch
-curl -L https://raw.githubusercontent.com/sqitchers/docker-sqitch/main/docker-sqitch.bat -o sqitch.bat
-sqitch.bat help
+curl -L https://raw.githubusercontent.com/sqitchers/docker-sqitch/main/docker-sqitch.bat -o sqitch
+.\sqitch help
 ```
 
 ## Description
