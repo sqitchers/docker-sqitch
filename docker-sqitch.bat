@@ -25,44 +25,19 @@ set passopt=%passopt% -e "LESS=%LESS%"
 
 echo %passopt% 
 
-REM IF DEFINED SQITCH_USERNAME (
-REM     set passopt=%passopt% -e %SQITCH_USERNAME%
-REM )
-echo %SQITCH_CONFIG%
-set "OPTIONALVARS=%SQITCH_CONFIG% %SQITCH_USERNAME% %SQITCH_PASSWORD% %SQITCH_FULLNAME%"
-echo %passopt% 
-echo ::: step1a ::::
-
-for %%i in (%OPTIONALVARS%) do (
- echo %%i is defined 2
- SET passopt=!passopt! -e %%i
+for %%i in (
+    SQITCH_CONFIG SQITCH_USERNAME SQITCH_PASSWORD SQITCH_FULLNAME SQITCH_EMAIL SQITCH_TARGET
+    DBI_TRACE
+    PGUSER PGPASSWORD PGHOST PGHOSTADDR PGPORT PGDATABASE PGSERVICE PGOPTIONS PGSSLMODE PGREQUIRESSL PGSSLCOMPRESSION PGREQUIREPEER PGKRBSRVNAME PGKRBSRVNAME PGGSSLIB PGCONNECT_TIMEOUT PGCLIENTENCODING PGTARGETSESSIONATTRS
+    MYSQL_PWD MYSQL_HOST MYSQL_TCP_PORT
+    TNS_ADMIN TWO_TASK ORACLE_SID
+    ISC_USER ISC_PASSWORD
+    VSQL_HOST VSQL_PORT VSQL_USER VSQL_PASSWORD VSQL_SSLMODE
+    SNOWSQL_ACCOUNT SNOWSQL_USER SNOWSQL_PWD SNOWSQL_HOST SNOWSQL_PORT SNOWSQL_DATABASE SNOWSQL_REGION SNOWSQL_WAREHOUSE SNOWSQL_PRIVATE_KEY_PASSPHRASE
+) do if defined %%i (
+    echo %%i is defined as !%%i!
+    SET passopt=!passopt! -e !%%i!
 )
-REM ECHO %passopt:~2%
-echo ::: step1b ::::
-echo %passopt% 
-echo ::: step1c ::::
-
-for %%i in (SQITCH_CONFIG SQITCH_USERNAME SQITCH_PASSWORD SQITCH_FULLNAME SQITCH_EMAIL SQITCH_TARGET) do if defined %%i (
-    echo %%i is defined %%%i%
-    SET passopt=!passopt! -e %%i
-)
-
-echo %passopt% 
-REM # Iterate over optional Sqitch and engine variables.
-REM for var in \
-REM     SQITCH_CONFIG SQITCH_USERNAME SQITCH_PASSWORD SQITCH_FULLNAME SQITCH_EMAIL SQITCH_TARGET \
-REM     DBI_TRACE \
-REM     PGUSER PGPASSWORD PGHOST PGHOSTADDR PGPORT PGDATABASE PGSERVICE PGOPTIONS PGSSLMODE PGREQUIRESSL PGSSLCOMPRESSION PGREQUIREPEER PGKRBSRVNAME PGKRBSRVNAME PGGSSLIB PGCONNECT_TIMEOUT PGCLIENTENCODING PGTARGETSESSIONATTRS \
-REM     MYSQL_PWD MYSQL_HOST MYSQL_TCP_PORT \
-REM     TNS_ADMIN TWO_TASK ORACLE_SID \
-REM     ISC_USER ISC_PASSWORD \
-REM     VSQL_HOST VSQL_PORT VSQL_USER VSQL_PASSWORD VSQL_SSLMODE \
-REM     SNOWSQL_ACCOUNT SNOWSQL_USER SNOWSQL_PWD SNOWSQL_HOST SNOWSQL_PORT SNOWSQL_DATABASE SNOWSQL_REGION SNOWSQL_WAREHOUSE SNOWSQL_PRIVATE_KEY_PASSPHRASE
-REM do
-REM     if [ -n "${!var}" ]; then
-REM        passopt+=(-e $var)
-REM     fi
-REM done
 
 REM # Determine the name of the container home directory.
 set homedst=/home
@@ -75,10 +50,10 @@ set passopt=%passopt% -e "HOME=%homedst%"
 echo %passopt% 
 
 REM # Run the container with the current and home directories mounted.
-REM docker run -it --rm --network host \
-REM     --mount "type=bind,src=$(pwd),dst=/repo" \
-REM     --mount "type=bind,src=%HOME%,dst=%homedst%" \
-REM     "%passopt%" "%SQITCH_IMAGE%"
+docker run -it --rm --network host \
+    --mount "type=bind,src=%UserProfile%,dst=\repo" \
+    --mount "type=bind,src=%HOME%,dst=%homedst%" \
+    "%passopt%" "%SQITCH_IMAGE%"
 
 echo end
 endlocal
