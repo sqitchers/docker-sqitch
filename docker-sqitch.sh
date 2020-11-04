@@ -21,6 +21,10 @@ case "$(uname -s)" in
     Darwin*)
         passopt+=(-e "SQITCH_ORIG_FULLNAME=$(/usr/bin/id -P $user | awk -F '[:]' '{print $8}')")
         ;;
+    # windows username
+    MINGW32_NT*|MINGW64_NT*)
+        passopt+=(-e "SQITCH_ORIG_FULLNAME=$user")
+        ;;
     MINGW*|CYGWIN*)
         passopt+=(-e "SQITCH_ORIG_FULLNAME=$(net user $user)")
         ;;
