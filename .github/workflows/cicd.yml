@@ -1,9 +1,8 @@
 name: CI/CD
 on:
   push:
-    branches: ['*']
-  pull_request:
-    branches: ['*']
+    branches: 
+      - master
   schedule:
     - cron: '0 10 25 * *' # Monthly at 10am on the 25th
 jobs:

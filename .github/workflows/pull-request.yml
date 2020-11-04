@@ -1,0 +1,12 @@
+name: Pull-Request
+on:
+  pull_request:
+jobs:
+  build:
+    name: Build and Push to Docker Hub
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out the repo
+        uses: actions/checkout@v2
+      - name: Build the Image
+        run: ./build

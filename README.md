@@ -1,9 +1,20 @@
 Sqitch Docker Packaging
 =======================
 
+linux,mac
+
+```sh
     docker pull sqitch/sqitch
     curl -L https://git.io/JJKCn -o sqitch && chmod +x sqitch
     ./sqitch help
+```
+
+windows:[git bash](https://gitforwindows.org/)
+```sh
+docker pull sqitch/sqitch
+curl -L https://git.io/JJKCn -o sqitch
+sh sqitch help
+```
 
 This project is the source for creating the official [Sqitch Project] Docker
 Image. It's built on [stable Debian slim] in an effort to keep the image as
