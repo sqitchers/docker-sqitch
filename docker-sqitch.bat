@@ -45,7 +45,7 @@ echo %passopt%
 REM # Run the container with the current and home directories mounted.
 @echo on
 docker run -it --rm --network host ^
-    --mount type=bind,src=%UserProfile%,dst=/repo ^
+    --mount type=bind,src=%cd%,dst=/repo ^
     --mount type=bind,src=%UserProfile%,dst=%homedst% ^
     %passopt% %SQITCH_IMAGE% %*
 
