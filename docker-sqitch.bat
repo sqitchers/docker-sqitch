@@ -1,7 +1,7 @@
-@echo off & setlocal EnableDelayedExpansion
-setlocal
+@echo off & setlocal enableextensions enabledelayedexpansion
+
 REM # Determine which Docker image to run.
-if "%SQITCH_IMAGE%"=="" (
+IF NOT DEFINED SQITCH_IMAGE (
     set SQITCH_IMAGE=sqitch/sqitch:latest
 ) 
 echo %SQITCH_IMAGE%
@@ -9,20 +9,45 @@ REM set SQITCH_IMAGE=sqitch/sqitch:latest
 
 REM # Set up required pass-through variables.
 REM set user=whoami
+echo ::: step1 ::::
 FOR /F "tokens=*" %%g IN ('whoami') do (SET user=%%g)
 set passopt= -e "SQITCH_ORIG_SYSUSER=%username%"
 FOR /F "tokens=*" %%g IN ('hostname') do (SET machinehostname=%%g)
 set passopt=%passopt% -e "SQITCH_ORIG_EMAIL=%username%@%machinehostname%"
 FOR /F "tokens=*" %%g IN ('tzutil /g') do (SET TZ=%%g)
 set passopt=%passopt% -e "TZ=%TZ%"
-if "%LESS%"=="" (
+if NOT DEFINED LESS (
     set LESS=--R
 )
-if "%LESS%"=="" (
+REM if "%LESS%"=="" (
+
 set passopt=%passopt% -e "LESS=%LESS%"
 
 echo %passopt% 
 
+REM IF DEFINED SQITCH_USERNAME (
+REM     set passopt=%passopt% -e %SQITCH_USERNAME%
+REM )
+echo %SQITCH_CONFIG%
+set "OPTIONALVARS=%SQITCH_CONFIG% %SQITCH_USERNAME% %SQITCH_PASSWORD% %SQITCH_FULLNAME%"
+echo %passopt% 
+echo ::: step1a ::::
+
+for %%i in (%OPTIONALVARS%) do (
+ echo %%i is defined 2
+ SET passopt=!passopt! -e %%i
+)
+REM ECHO %passopt:~2%
+echo ::: step1b ::::
+echo %passopt% 
+echo ::: step1c ::::
+
+for %%i in (SQITCH_CONFIG SQITCH_USERNAME SQITCH_PASSWORD SQITCH_FULLNAME SQITCH_EMAIL SQITCH_TARGET) do if defined %%i (
+    echo %%i is defined %%%i%
+    SET passopt=!passopt! -e %%i
+)
+
+echo %passopt% 
 REM # Iterate over optional Sqitch and engine variables.
 REM for var in \
 REM     SQITCH_CONFIG SQITCH_USERNAME SQITCH_PASSWORD SQITCH_FULLNAME SQITCH_EMAIL SQITCH_TARGET \
@@ -47,11 +72,13 @@ REM fi
 REM # Set HOME, since the user ID likely won't be the same as for the sqitch user.
 set passopt=%passopt% -e "HOME=%homedst%"
 
+echo %passopt% 
+
 REM # Run the container with the current and home directories mounted.
-docker run -it --rm --network host \
-    --mount "type=bind,src=$(pwd),dst=/repo" \
-    --mount "type=bind,src=%HOME%,dst=%homedst%" \
-    "%passopt%" "%SQITCH_IMAGE%"
+REM docker run -it --rm --network host \
+REM     --mount "type=bind,src=$(pwd),dst=/repo" \
+REM     --mount "type=bind,src=%HOME%,dst=%homedst%" \
+REM     "%passopt%" "%SQITCH_IMAGE%"
 
 echo end
 endlocal
