@@ -53,7 +53,7 @@ REM # Run the container with the current and home directories mounted.
 @echo on
 docker run -it --rm --network host ^
     --mount "type=bind,src=%UserProfile%,dst=\repo" ^
-    --mount "type=bind,src=%HOME%,dst=%homedst%" ^
+    --mount "type=bind,src=%UserProfile%,dst=%homedst%" ^
     %passopt% -d %SQITCH_IMAGE%
 
 echo end
