@@ -19,7 +19,7 @@ docker pull sqitch/sqitch
 curl -L https://git.io/JJKCn -o sqitch
 sh sqitch help
 ```
-* cmd
+* cmd **WORKS BETTER** on windows
 ```bat
 docker pull sqitch/sqitch
 curl -L https://raw.githubusercontent.com/sqitchers/docker-sqitch/main/docker-sqitch.bat -o sqitch.bat
