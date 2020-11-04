@@ -1,7 +1,9 @@
-Sqitch Docker Packaging
+# Sqitch Docker Packaging
 =======================
 
-linux,mac
+## Setup
+
+### linux,mac
 
 ```sh
     docker pull sqitch/sqitch
@@ -9,12 +11,15 @@ linux,mac
     ./sqitch help
 ```
 
-windows:[git bash](https://gitforwindows.org/)
+### windows:[git bash](https://gitforwindows.org/)
+
 ```sh
 docker pull sqitch/sqitch
 curl -L https://git.io/JJKCn -o sqitch
 sh sqitch help
 ```
+
+## Description
 
 This project is the source for creating the official [Sqitch Project] Docker
 Image. It's built on [stable Debian slim] in an effort to keep the image as
@@ -23,7 +28,7 @@ managing [PostgreSQL], [SQLite], [MariaDB] ([MySQL]), and [Firebird] databases,
 and other images may be built to support for the other database engines that
 Sqitch supports.
 
-Notes
+## Notes
 -----
 
 *   The [`docker-sqitch.sh`] shell script is the easiest way to run Sqitch from
