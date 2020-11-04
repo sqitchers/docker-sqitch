@@ -3,7 +3,7 @@ on:
   pull_request:
 jobs:
   build:
-    name: Build and Push to Docker Hub
+    name: Build Docker Image
     runs-on: ubuntu-latest
     steps:
       - name: Check out the repo
