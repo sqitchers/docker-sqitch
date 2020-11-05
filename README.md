@@ -1,9 +1,27 @@
 Sqitch Docker Packaging
 =======================
 
-    docker pull sqitch/sqitch
-    curl -L https://git.io/JJKCn -o sqitch && chmod +x sqitch
-    ./sqitch help
+Synopsis
+--------
+
+### Linux, macOS, Git Bash
+
+```sh
+docker pull sqitch/sqitch
+curl -L https://git.io/JJKCn -o sqitch && chmod +x sqitch
+./sqitch help
+```
+
+### Windows
+
+```bat
+docker pull sqitch/sqitch
+curl -L https://git.io/JTAi6 -o sqitch
+.\sqitch help
+```
+
+Description
+-----------
 
 This project is the source for creating the official [Sqitch Project] Docker
 Image. It's built on [stable Debian slim] in an effort to keep the image as
@@ -21,6 +39,12 @@ Notes
     and reads configuration from the home directory almost as if it was running
     natively on the local host. It also copies over most of the environment
     variables that Sqitch cares about, for transparent configuration.
+*   The [`docker-sqitch.bat`] batch script is an alternative for running Sqitch
+    on Windows. Modeled on [`docker-sqitch.sh`], it also detects environment
+    variables and mounts the project and home directories. Support for
+    configuration files will vary by database client, as many on Windows
+    differ from their *unix counterparts and won't map into the container home
+    directory.
 *   By default, the container runs as the `sqitch` user. On macOS and Windows
     this works well, as files created by Sqitch in the working directory on the
     host will be properly owned by the host user. On Linux, however,
