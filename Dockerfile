@@ -6,7 +6,7 @@ ARG VERSION
 RUN mkdir -p /usr/share/man/man1 /usr/share/man/man7 \
     && apt-get -qq update \
     && apt-get -qq install build-essential perl curl \
-       unixodbc-dev firebird-dev sqlite libpq-dev libmariadbclient-dev \
+       unixodbc-dev firebird-dev sqlite3 libpq-dev libmariadb-dev \
     && curl -LO https://www.cpan.org/authors/id/D/DW/DWHEELER/App-Sqitch-v$VERSION.tar.gz \
     && mkdir src \
     && tar -zxf App-Sqitch-v$VERSION.tar.gz --strip-components 1 -C src
@@ -36,11 +36,11 @@ FROM debian:stable-slim AS sqitch
 # Install runtime system dependencies and remove unnecesary files.
 RUN mkdir -p /usr/share/man/man1 /usr/share/man/man7 \
     && apt-get -qq update \
-    && apt-get -qq --no-install-recommends install less libperl5.28 perl-doc nano ca-certificates \
+    && apt-get -qq --no-install-recommends install less libperl5.32 perl-doc nano ca-certificates \
        sqlite3 \
        firebird3.0-utils libfbclient2 \
        libpq5 postgresql-client \
-       mariadb-client-core-10.3 libmariadb-dev-compat libdbd-mysql-perl \
+       mariadb-client-core-10.5 libmariadb-dev-compat libdbd-mysql-perl \
     && apt-cache pkgnames | grep python | xargs apt-get purge -qq \
     && apt-cache pkgnames | grep libmagic | xargs apt-get purge -qq \
     && apt-get clean \
