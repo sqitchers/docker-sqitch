@@ -2,9 +2,11 @@ FROM debian:stable-slim AS ora-build
 
 WORKDIR /work
 ARG INSTANTCLIENT_VERSION=21.3.0.0.0
-ADD https://download.oracle.com/otn_software/linux/instantclient/213000/instantclient-basic-linux.x64-${INSTANTCLIENT_VERSION}.zip ./
-ADD https://download.oracle.com/otn_software/linux/instantclient/213000/instantclient-sqlplus-linux.x64-${INSTANTCLIENT_VERSION}.zip ./
-ADD https://download.oracle.com/otn_software/linux/instantclient/213000/instantclient-sdk-linux.x64-${INSTANTCLIENT_VERSION}.zip ./
+ARG INSTANTCLIENT_VDIR=213000
+
+ADD https://download.oracle.com/otn_software/linux/instantclient/${INSTANTCLIENT_VDIR}/instantclient-basic-linux.x64-${INSTANTCLIENT_VERSION}.zip ./
+ADD https://download.oracle.com/otn_software/linux/instantclient/${INSTANTCLIENT_VDIR}/instantclient-sqlplus-linux.x64-${INSTANTCLIENT_VERSION}.zip ./
+ADD https://download.oracle.com/otn_software/linux/instantclient/${INSTANTCLIENT_VDIR}/instantclient-sdk-linux.x64-${INSTANTCLIENT_VERSION}.zip ./
 
 ENV ORACLE_HOME /work/instantclient
 ENV LD_LIBRARY_PATH /work/instantclient

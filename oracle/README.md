@@ -6,9 +6,13 @@ Sqitch Oracle Docker Image
         docker build -t sqitch-oracle .
 
     If you want to control the version of [Instant Client], pass the
-    `INSTANTCLIENT_VERSION` argument:
+    `INSTANTCLIENT_VERSION` AND `INSTANTCLIENT_VDIR` (the version with dots
+    removed) arguments:
 
-        docker build -t sqitch-oracle --build-arg INSTANTCLIENT_VERSION=21.3.0.0.0 .
+        docker build -t sqitch-oracle \
+               --build-arg INSTANTCLIENT_VERSION=21.3.0.0.0 \
+               --build-arg INSTANTCLIENT_VDIR=213000 \
+               .
 
 2.  Set up a [`tnsnames.ora` file] in your home directory. For example,
     `~./sqlplus/tnsnames.ora`.
