@@ -1,21 +1,19 @@
 Sqitch Oracle Docker Image
 ==========================
 
-1.  Download the basiclite (or basic), SQL*Plus, and SDK [Instant Client] Zip
-    files for x64 Linux. The names should match these patterns:
+1.  Build an image named `sqitch-oracle` with this command
 
-    *   `instantclient-basic*-linux.x64-*.zip`
-    *   `instantclient-sqlplus-linux.x64-*.zip`
-    *   `instantclient-sdk-linux.x64-*.zip`
+        docker build -t sqitch-oracle .
 
-2.  Build an image named `sqitch-oracle` with this command
+    If you want to control the version of [Instant Client], pass the
+    `INSTANTCLIENT_VERSION` argument:
 
-         docker build -t sqitch-oracle .
+        docker build -t sqitch-oracle --build-arg INSTANTCLIENT_VERSION=21.3.0.0.0 .
 
-3.  Set up a [`tnsnames.ora` file] in your home directory. For example,
+2.  Set up a [`tnsnames.ora` file] in your home directory. For example,
     `~./sqlplus/tnsnames.ora`.
 
-4.  Set the `$TNS_ADMIN` environment variable to the directory of the `tnsnames.ora`
+3.  Set the `$TNS_ADMIN` environment variable to the directory of the `tnsnames.ora`
     file, replacing the path to your home directory with `/home`. For example, if
     the file is `~./sqlplus/tnsnames.ora`, run Sqitch like so:
 
