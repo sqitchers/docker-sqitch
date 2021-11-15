@@ -8,6 +8,7 @@ VERSION=1.1.0
 DIR=${DIR:=.}
 REGISTRY=${REGISTRY:="$NAME"}
 GIT_BRANCH=${GIT_BRANCH:-${TRAVIS_BRANCH:-$(git rev-parse --abbrev-ref HEAD)}}
+SHA=$(git rev-parse --short HEAD)
 
 # For main Sqitch build, the main tag is "latest" and there
 # is no sub-package.
@@ -29,6 +30,9 @@ fi
 
 # Always include the version tag.
 tagopt+=(--tag "${REGISTRY}/${NAME}:${VERSION}${PKG}")
+
+# Always include the short SHA.
+tagopt+=(--tag "${REGISTRY}/${NAME}:${VERSION}${PKG}-${SHA}")
 
 docker build --pull \
   --label org.opencontainers.image.created=$(date -u +"%Y-%m-%dT%H:%M:%SZ") \
