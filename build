@@ -46,7 +46,7 @@ docker build --pull \
   --label org.opencontainers.image.licenses="MIT" \
   --label org.opencontainers.image.ref.name="sqitch${PKG}-${VERSION}" \
   --label org.opencontainers.image.title="Sqitch" \
-  --label org.opencontainers.image.description="Sane database change management" \
+  --label org.opencontainers.image.description="Sensible database change management" \
   "${tagopt[@]}" \
   --build-arg "VERSION=${VERSION}" \
   "$@" .
