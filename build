@@ -7,8 +7,6 @@ VERSION=1.2.0
 
 DIR=${DIR:=.}
 REGISTRY=${REGISTRY:="$NAME"}
-GIT_BRANCH=${GIT_BRANCH:-${TRAVIS_BRANCH:-$(git rev-parse --abbrev-ref HEAD)}}
-SHA=$(git rev-parse --short HEAD)
 
 # For main Sqitch build, the main tag is "latest" and there
 # is no sub-package.
@@ -22,17 +20,19 @@ if [ "$DIR" != "." ]; then
     TAG="$DIR"
 fi
 
-# Only include the latest or directory tag when building main.
-tagopt=()
-if [[ "$GIT_BRANCH" =~ (^|/)main$ ]]; then
-    tagopt+=(--tag "${REGISTRY}/${NAME}:${TAG}")
+# Always include "latest" and the version.
+tagopt=(
+    --tag "${REGISTRY}/${NAME}:${TAG}"
+    --tag "${REGISTRY}/${NAME}:${VERSION}${PKG}"
+)
+
+# Include the git tag if differnt from the version.
+if [ "$GITHUB_REF_TYPE" == "tag" ]; then
+    GIT_TAG=${GITHUB_REF/refs\/tags\//}
+    if [ "$GIT_TAG" != "$VERSION" ]; then
+        tagopt+=(--tag "${REGISTRY}/${NAME}:${GIT_TAG}${PKG}")
+    fi
 fi
-
-# Always include the version tag.
-tagopt+=(--tag "${REGISTRY}/${NAME}:${VERSION}${PKG}")
-
-# Always include the short SHA.
-tagopt+=(--tag "${REGISTRY}/${NAME}:${VERSION}${PKG}-${SHA}")
 
 docker build --pull \
   --label org.opencontainers.image.created=$(date -u +"%Y-%m-%dT%H:%M:%SZ") \
