@@ -8,6 +8,7 @@ VERSION=1.1.0
 DIR=${DIR:=.}
 REGISTRY=${REGISTRY:="$NAME"}
 GIT_BRANCH=${GIT_BRANCH:-${TRAVIS_BRANCH:-$(git rev-parse --abbrev-ref HEAD)}}
+SHA=$(git rev-parse --short HEAD)
 
 # For main Sqitch build, the main tag is "latest" and there
 # is no sub-package.
@@ -27,8 +28,14 @@ if [[ "$GIT_BRANCH" =~ (^|/)main$ ]]; then
     tagopt+=(--tag "${REGISTRY}/${NAME}:${TAG}")
 fi
 
-# Always include the version tag.
+# Always include the version and git tags.
 tagopt+=(--tag "${REGISTRY}/${NAME}:${VERSION}${PKG}")
+if [ "$GITHUB_REF_TYPE" == "tag" ]; then
+    GIT_TAG=${GITHUB_REF/refs\/tags\//}
+    if [ "$GIT_TAG" != "$VERSION" ]; then
+        tagopt+=(--tag "${REGISTRY}/${NAME}:${GIT_TAG}${PKG}")
+    fi
+fi
 
 docker build --pull \
   --label org.opencontainers.image.created=$(date -u +"%Y-%m-%dT%H:%M:%SZ") \
@@ -42,7 +49,7 @@ docker build --pull \
   --label org.opencontainers.image.licenses="MIT" \
   --label org.opencontainers.image.ref.name="sqitch${PKG}-${VERSION}" \
   --label org.opencontainers.image.title="Sqitch" \
-  --label org.opencontainers.image.description="Sane database change management" \
+  --label org.opencontainers.image.description="Sensible database change management" \
   "${tagopt[@]}" \
   --build-arg "VERSION=${VERSION}" \
   "$@" .
