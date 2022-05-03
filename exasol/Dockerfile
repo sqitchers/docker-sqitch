@@ -4,14 +4,17 @@ WORKDIR /work
 
 # Download and unpack EXAplus and the ODBC driver.
 # COPY *.tar.gz ./
-ARG version=7.1.2
-ADD https://www.exasol.com/support/secure/attachment/156920/EXAplus-$version.tar.gz \
-    https://www.exasol.com/support/secure/attachment/156938/EXASOL_ODBC-$version.tar.gz \
+# https://www.exasol.com/portal/display/DOWNLOAD/EXASOL+Download+Section
+ARG version=7.1.7
+ARG exap_num=198012
+ARG odbc_num=198356
+ADD https://www.exasol.com/support/secure/attachment/$exap_num/EXAplus-$version.tar.gz \
+    https://www.exasol.com/support/secure/attachment/$odbc_num/EXASOL_ODBC-$version.tar.gz \
     ./
 
-ARG version=7.1.2
 RUN tar zxf EXASOL_ODBC-$version.tar.gz \
-    && mv EXASOL_ODBC-$version/lib/linux/x86_64/ odbc \
+    && ls -l \
+    && mv EXASolution_ODBC-$version/lib/linux/x86_64/ odbc \
     && tar zxf EXAplus-$version.tar.gz \
     && mv EXAplus-$version/ exaplus \
     && rm -rf exaplus/doc
