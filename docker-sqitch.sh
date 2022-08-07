@@ -54,8 +54,15 @@ fi
 # Set HOME, since the user ID likely won't be the same as for the sqitch user.
 passopt+=(-e "HOME=${homedst}")
 
+# Determine necessary flags when stdin and/or stdout are opened on a TTY.
+if [ -t 0 ] && [ -t 1 ]; then
+    passopt+=(--interactive --tty)
+elif [ ! -t 0 ]; then
+    passopt+=(--interactive)
+fi
+
 # Run the container with the current and home directories mounted.
-docker run -it --rm --network host \
+docker run --rm --network host \
     --mount "type=bind,src=$(pwd),dst=/repo" \
     --mount "type=bind,src=$HOME,dst=$homedst" \
     "${passopt[@]}" "$SQITCH_IMAGE" "$@"
