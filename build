@@ -23,7 +23,7 @@ fi
 # Always include "latest" and the version.
 tagopt=(
     --tag "${REGISTRY}/${NAME}:${TAG}"
-    --tag "${REGISTRY}/${NAME}:${VERSION}${PKG}"
+    --tag "${REGISTRY}/${NAME}:v${VERSION}${PKG}"
 )
 
 # Include the git tag if differnt from the version.
@@ -41,11 +41,11 @@ docker buildx build --platform=linux/amd64 --pull \
   --label org.opencontainers.image.url="https://hub.docker.com/r/sqitch/sqitch/" \
   --label org.opencontainers.image.documentation="https://github.com/sqitchers/docker-sqitch#readme" \
   --label org.opencontainers.image.source="https://github.com/sqitchers/docker-sqitch" \
-  --label org.opencontainers.image.version="$VERSION" \
+  --label org.opencontainers.image.version="v$VERSION" \
   --label org.opencontainers.image.revision="$(git rev-parse --abbrev-ref HEAD)" \
   --label org.opencontainers.image.vendor="The Sqitch Community" \
   --label org.opencontainers.image.licenses="MIT" \
-  --label org.opencontainers.image.ref.name="sqitch${PKG}-${VERSION}" \
+  --label org.opencontainers.image.ref.name="sqitch${PKG}-v${VERSION}" \
   --label org.opencontainers.image.title="Sqitch" \
   --label org.opencontainers.image.description="Sensible database change management" \
   "${tagopt[@]}" \
