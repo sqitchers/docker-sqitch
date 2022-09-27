@@ -4,7 +4,11 @@ IF NOT DEFINED SQITCH_IMAGE (
     set SQITCH_IMAGE=sqitch/sqitch:latest
 )
 REM set SQITCH_IMAGE=sqitch/sqitch:latest
-
+SET interactive= 
+IF "%~1" == "" (
+    echo Running normal
+    SET interactive=-it --entrypoint /bin/bash
+)
 REM # Set up required pass-through variables.
 FOR /F "tokens=*" %%g IN ('whoami') do (SET user=%%g)
 set passopt= -e SQITCH_ORIG_SYSUSER="%username%"
@@ -43,7 +47,7 @@ echo %passopt%
 
 REM # Run the container with the current and home directories mounted.
 @echo on
-docker run -it --rm --network host ^
+docker run %interactive% --rm --network host ^
     --mount "type=bind,src=%cd%,dst=/repo" ^
     --mount "type=bind,src=%UserProfile%,dst=%homedst%" ^
     %passopt% %SQITCH_IMAGE% %*
