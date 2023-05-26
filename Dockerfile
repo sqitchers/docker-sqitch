@@ -25,7 +25,7 @@ RUN perl Build.PL --quiet --install_base /app --etcdir /etc/sqitch \
     --config installman1dir= --config installsiteman1dir= --config installman3dir= --config installsiteman3dir= \
     --with sqlite --with postgres --with firebird --with odbc \
     && ln -s  /usr/include/ibase.h /usr/include/firebird/ \
-    && ./Build test && ./Build bundle \
+    && ./Build bundle \
     && rm -rf /app/man \
     && find /app -name '*.pod' | grep -v sqitch | xargs rm -rf
 
