@@ -1,4 +1,4 @@
-FROM debian:stable-slim AS sqitch-build
+FROM debian:bullseye-slim AS sqitch-build
 
 # Install system dependencies.
 WORKDIR /work
@@ -31,7 +31,7 @@ RUN perl Build.PL --quiet --install_base /app --etcdir /etc/sqitch \
 
 ################################################################################
 # Copy to the final image without all the build stuff.
-FROM debian:stable-slim AS sqitch
+FROM debian:bullseye-slim AS sqitch
 
 # Install runtime system dependencies and remove unnecesary files.
 RUN mkdir -p /usr/share/man/man1 /usr/share/man/man7 \

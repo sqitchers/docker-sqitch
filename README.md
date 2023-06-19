@@ -24,9 +24,9 @@ Description
 -----------
 
 This project is the source for creating the official [Sqitch Project] Docker
-Image. It's built on [stable Debian slim] in an effort to keep the image as
+Image. It's built on [Debian bullseye-slim] in an effort to keep the image as
 small as possible while supporting all known engines. It includes support for
-managing [PostgreSQL], [CokroachDB], [YugabyteDB], [SQLite], [MariaDB]
+managing [PostgreSQL], [CockroachDB], [YugabyteDB], [SQLite], [MariaDB]
 ([MySQL]), and [Firebird] databases, and other images may be built to support
 for the other database engines that Sqitch supports.
 
@@ -78,7 +78,7 @@ Notes
     one based on this image and add whatever editors you like.
 
   [Sqitch Project]: https://sqitch.org
-  [stable Debian slim]: https://docs.docker.com/samples/library/debian/#debiansuite-slim
+  [Debian bullseye-slim]: https://hub.docker.com/_/debian/tags?name=bullseye-slim
   [PostgreSQL]: https://postgresql.org
   [YugabyteDB]: https://www.yugabyte.com/yugabytedb/
   [CockroachDB]: https://www.cockroachlabs.com/product/
