@@ -7,7 +7,7 @@ WORKDIR /work
 # https://docs.snowflake.com/en/release-notes/client-change-log-snowsql
 # https://sfc-repo.snowflakecomputing.com/index.html
 ADD https://sfc-repo.snowflakecomputing.com/snowsql/bootstrap/1.2/linux_x86_64/snowsql-1.2.27-linux_x86_64.bash snowsql.bash
-ADD https://sfc-repo.snowflakecomputing.com/odbc/linux/2.25.12/snowflake_linux_x8664_odbc-2.25.12.tgz snowflake_linux_x8664_odbc.tgz
+ADD ADD https://sfc-repo.snowflakecomputing.com/odbc/linuxaarch64/2.25.12/snowflake_linux_aarch64_odbc-2.25.12.tgz snowflake_linux_x8664_odbc.tgz
 COPY conf ./
 
 # Tell SnowSQL where to store its versions and config. Need to keep it inside
