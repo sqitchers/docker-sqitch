@@ -2,11 +2,11 @@
 
 set -e
 
-NAME=sqitch
-VERSION=1.4.0
+source .envrc
 
 DIR=${DIR:=.}
 REGISTRY=${REGISTRY:="$NAME"}
+ARCHS=${ARCHS:='amd64 arm64'}
 
 # For main Sqitch build, the main tag is "latest" and there
 # is no sub-package.
@@ -34,20 +34,23 @@ if [ "$GITHUB_REF_TYPE" == "tag" ]; then
     fi
 fi
 
-# The Oracle and Snowflake images require amd64.
-docker buildx build --platform=linux/amd64 --pull \
-  --label org.opencontainers.image.created=$(date -u +"%Y-%m-%dT%H:%M:%SZ") \
-  --label org.opencontainers.image.authors='Sqitch Hackers <sqitch-hackers@googlegroups.com>' \
-  --label org.opencontainers.image.url="https://hub.docker.com/r/sqitch/sqitch/" \
-  --label org.opencontainers.image.documentation="https://github.com/sqitchers/docker-sqitch#readme" \
-  --label org.opencontainers.image.source="https://github.com/sqitchers/docker-sqitch" \
-  --label org.opencontainers.image.version="v$VERSION" \
-  --label org.opencontainers.image.revision="$(git rev-parse --abbrev-ref HEAD)" \
-  --label org.opencontainers.image.vendor="The Sqitch Community" \
-  --label org.opencontainers.image.licenses="MIT" \
-  --label org.opencontainers.image.ref.name="sqitch${PKG}-v${VERSION}" \
-  --label org.opencontainers.image.title="Sqitch" \
-  --label org.opencontainers.image.description="Sensible database change management" \
-  "${tagopt[@]}" \
-  --build-arg "VERSION=${VERSION}" \
-  "$@" .
+# Build and export imaages to Docker for all supported architectures.
+for arch in $ARCHS; do
+    printf "Building for linux/%s\n" "${arch}"
+    docker buildx build --platform="linux/${arch}" --pull --load \
+    --label org.opencontainers.image.created=$(date -u +"%Y-%m-%dT%H:%M:%SZ") \
+    --label org.opencontainers.image.authors="${AUTHORS}" \
+    --label org.opencontainers.image.url="${URL}" \
+    --label org.opencontainers.image.documentation="${DOCS}" \
+    --label org.opencontainers.image.source="${SOURCE}" \
+    --label org.opencontainers.image.version="v${VERSION}" \
+    --label org.opencontainers.image.revision="$(git rev-parse --abbrev-ref HEAD)" \
+    --label org.opencontainers.image.vendor="${VENDOR}" \
+    --label org.opencontainers.image.licenses="${LICENSE}" \
+    --label org.opencontainers.image.ref.name="${NAME}${PKG}-v${VERSION}" \
+    --label org.opencontainers.image.title="${TITLE}" \
+    --label org.opencontainers.image.description="${DESCRIPTION}" \
+    "${tagopt[@]}" \
+    --build-arg "VERSION=${VERSION}" \
+    "$@" .
+done

@@ -4,20 +4,76 @@ on:
   pull_request:
   schedule:
     - cron: '0 10 25 * *' # Monthly at 10am on the 25th
+
 jobs:
   build:
-    name: Build and Push to Docker Hub
+    # https://docs.docker.com/build/ci/github-actions/multi-platform/
+    name: 📦 Build and Push to Docker Hub
     runs-on: ubuntu-latest
     steps:
-      - name: Check out the repo
-        uses: actions/checkout@v3
-      - name: Build the Image
-        run: ./build
+      # https://github.com/orgs/community/discussions/25678#discussioncomment-5242449
+      - name: Free Disk Space
+        run: rm -rf /opt/hostedtoolcache
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Set up Environment
+        run: cat .envrc >> "$GITHUB_ENV"
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      # https://docs.docker.com/build/ci/github-actions/manage-tags-labels/
+      - name: Docker meta
+        uses: docker/metadata-action@v5
+        id: meta
+        with:
+          # list of Docker images to use as base name for tags
+          images: ${{ env.IMAGE }}
+          # generate Docker tags based on the following events/attributes
+          tags: |
+            type=ref,event=branch
+            type=ref,event=pr
+            type=ref,event=tag
+            type=match,pattern=v\d.\d.\d
+            type=match,pattern=v\d.\d
+          # Customize OCI labels.
+          labels: |
+            org.opencontainers.image.title=${{ env.TITLE }}
+            org.opencontainers.image.description=${{ env.DESCRIPTION }}
+            org.opencontainers.image.vendor=${{ env.VENDOR }}
+            org.opencontainers.image.authors=${{ env.AUTHORS }}
+            org.opencontainers.image.url=${{ env.URL }}
+            org.opencontainers.image.documentation=${{ env.DOCS }}
+            org.opencontainers.image.source=${{ env.SOURCE }}
+            org.opencontainers.image.version=v${{ env.VERSION }}
+            org.opencontainers.image.licenses=${{ env.LICENSE }}
+            org.opencontainers.image.ref.name=${{ env.NAME }}-v${{ env.VERSION }}
+
       - name: Log in to Docker Hub
-        uses: docker/login-action@v2
+        uses: docker/login-action@v3
         with:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
-      - name: Push the Image
-        if: startsWith(github.ref, 'refs/tags/v')
-        run: docker push -a sqitch/sqitch
+
+      - name: Build and Export to Docker
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          load: true
+          tags: ${{ env.IMAGE }}:test
+          build-args: VERSION=${{ env.VERSION }}
+
+      - name: Test
+        run: docker run --rm "${{ env.IMAGE }}:test"
+
+      # Release on a v* tag.
+      - name: Build and Push
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          platforms: linux/amd64,linux/arm64
+          push: ${{ startsWith(github.ref, 'refs/tags/v') }}
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          build-args: VERSION=${{ env.VERSION }}

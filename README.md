@@ -67,9 +67,11 @@ Notes
     for it to land). In the meantime you can [use a NAT gateway
     container](https://github.com/qoomon/docker-host) to forward traffic to the
     Docker host.
-*   Custom images for [Oracle], [Snowflake], [Exasol], or [Vertica] can be built
-    by downloading the appropriate binary files and using the `Dockerfile`s in
-    the appropriately-named subdirectories of this repository.
+*   Custom images for [Oracle], [Snowflake], or [Exasol] can be built by
+    downloading the appropriate binary files and using the `Dockerfile`s in the
+    appropriately-named subdirectories of this repository.
+*   The Sqitch image is built with AMD64 and ARM64 support, but the [Oracle],
+    [Snowflake] and [Exasol] images can currently only be built for AMD64.
 *   In an effort to keep things as simple as possible, the only editor included
     and configured for use in the image is [nano]. This is a very simple, tiny
     text editor suitable for editing change descriptions and the like. Its
@@ -91,5 +93,4 @@ Notes
   [Oracle]: https://www.oracle.com/database/
   [Snowflake]:https://www.snowflake.com
   [Exasol]:https://www.exasol.com/
-  [Vertica]: https://www.vertica.com
   [nano]: https://www.nano-editor.org/

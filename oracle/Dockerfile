@@ -1,28 +1,30 @@
 FROM debian:bullseye-slim AS ora-build
 
 WORKDIR /work
+
+# Alwyays install the latest version of instantclient.
 # https://www.oracle.com/database/technologies/instant-client/linux-x86-64-downloads.html
-ARG INSTANTCLIENT_VERSION=21.11.0.0.0dbru
-ARG INSTANTCLIENT_VDIR=2111000
+# https://www.oracle.com/database/technologies/instant-client/linux-arm-aarch64-downloads.html
 
-ADD https://download.oracle.com/otn_software/linux/instantclient/${INSTANTCLIENT_VDIR}/instantclient-basic-linux.x64-${INSTANTCLIENT_VERSION}.zip ./
-ADD https://download.oracle.com/otn_software/linux/instantclient/${INSTANTCLIENT_VDIR}/instantclient-sqlplus-linux.x64-${INSTANTCLIENT_VERSION}.zip ./
-ADD https://download.oracle.com/otn_software/linux/instantclient/${INSTANTCLIENT_VDIR}/instantclient-sdk-linux.x64-${INSTANTCLIENT_VERSION}.zip ./
-
+ENV BASEURI=https://download.oracle.com/otn_software/linux/instantclient/instantclient
 ENV ORACLE_HOME /work/instantclient
 ENV LD_LIBRARY_PATH /work/instantclient
 ENV PERL5LIB /work/tmp/lib/perl5
 
 RUN mkdir -p /usr/share/man/man1 /usr/share/man/man7 \
-    # Install dependen cies
+    # Install dependencies, including latest platform-specific instantclient.
     && apt-get -qq update \
     && apt-get -qq install build-essential libarchive-tools curl libaio-dev \
+    && case "$(arch)" in aarch64) export ORAPLAT=-arm64 ;; x86_64) export ORAPLAT=x64 ;; esac \
+    && curl "${BASEURI}-basic-linux${ORAPLAT}.zip" -o instantclient-basic.zip \
+    && curl "${BASEURI}-sqlplus-linux${ORAPLAT}.zip" -o instantclient-sqlplus.zip \
+    && curl "${BASEURI}-sdk-linux${ORAPLAT}.zip" -o instantclient-sdk.zip \
     && mkdir instantclient \
-    && bsdtar -C instantclient --strip-components 1 -zxf instantclient-basic-linux.x64-${INSTANTCLIENT_VERSION}.zip \
-    && bsdtar -C instantclient --strip-components 1 -zxf instantclient-sqlplus-linux.x64-${INSTANTCLIENT_VERSION}.zip \
+    && bsdtar -C instantclient --strip-components 1 -zxf instantclient-basic.zip \
+    && bsdtar -C instantclient --strip-components 1 -zxf instantclient-sqlplus.zip \
     # Copy basic and SQL*Plus for installation below.
     && cp -rf instantclient instantclient.install \
-    && bsdtar -C instantclient --strip-components 1 -zxf instantclient-sdk-linux.x64-${INSTANTCLIENT_VERSION}.zip \
+    && bsdtar -C instantclient --strip-components 1 -zxf instantclient-sdk.zip \
     # Install DBI in its own directory, then install DBD::Oracle.
     && curl https://cpanmin.us > cpanm && chmod +x cpanm \
     && ./cpanm install -l tmp --quiet --notest DBI \

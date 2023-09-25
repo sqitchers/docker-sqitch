@@ -1,4 +1,4 @@
-FROM debian:bullseye-slim AS exa-build
+FROM --platform=linux/amd64 debian:bullseye-slim AS exa-build
 
 WORKDIR /work
 
@@ -17,7 +17,7 @@ RUN tar zxf EXASOL_ODBC-$version.tar.gz \
     && mv EXAplus-$version/ exaplus \
     && rm -rf exaplus/doc
 
-FROM sqitch/sqitch:latest
+FROM --platform=linux/amd64 sqitch/sqitch:latest
 
 # Install runtime dependencies, remove unnecesary files, and create symlink.
 USER root
