@@ -16,7 +16,7 @@ curl -L https://git.io/JJKCn -o sqitch && chmod +x sqitch
 
 ```bat
 docker pull sqitch/sqitch
-curl -L https://git.io/JTAi6 -o sqitch.bat
+WebRequest -Uri "https://git.io/JTAi6" -OutFile "sqitch.bat"
 .\sqitch help
 ```
 
