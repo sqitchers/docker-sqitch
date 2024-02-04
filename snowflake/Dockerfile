@@ -1,4 +1,4 @@
-FROM debian:bullseye-slim AS snow-build
+FROM debian:bookworm-slim AS snow-build
 
 WORKDIR /work
 

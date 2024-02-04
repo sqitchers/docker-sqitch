@@ -1,4 +1,4 @@
-FROM --platform=linux/amd64 debian:bullseye-slim AS exa-build
+FROM --platform=linux/amd64 debian:bookworm-slim AS exa-build
 
 WORKDIR /work
 
