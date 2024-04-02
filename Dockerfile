@@ -41,7 +41,7 @@ RUN perl Build.PL --quiet --install_base /app --etcdir /etc \
 
 # Copy to the final image without all the build stuff.
 FROM alpine:latest AS sqitch
-RUN apk add --udpate perl tzdata less sqlite postgresql-client mysql-client unixodbc
+RUN apk add --update perl tzdata less sqlite postgresql-client mysql-client unixodbc
 
 # XXX Workaround to avoid https://github.com/perl5-dbi/DBD-mysql/issues/262.
 RUN apk add perl-dbd-mysql
