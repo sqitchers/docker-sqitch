@@ -28,7 +28,7 @@ for %%i in (
     SNOWSQL_ACCOUNT SNOWSQL_USER SNOWSQL_PWD SNOWSQL_HOST SNOWSQL_PORT SNOWSQL_DATABASE SNOWSQL_REGION SNOWSQL_WAREHOUSE SNOWSQL_PRIVATE_KEY_PASSPHRASE
 ) do if defined %%i (
     echo %%i is defined as !%%i!
-    SET passopt=!passopt! -e !%%i!
+    SET passopt=!passopt! -e %%i=!%%i!
 )
 
 REM # Determine the name of the container home directory.
