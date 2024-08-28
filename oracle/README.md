@@ -1,18 +1,21 @@
 Sqitch Oracle Docker Image
 ==========================
 
-1.  Build an image named `sqitch-oracle` with this command
+1.  Build an x86 image named `sqitch-oracle` with the latest version of
+    [Instant Client] by running this command from the root directory:
 
-        docker build -t sqitch-oracle .
+    ``` sh
+    env env DIR=oracle ARCHS=amd64 ./build
+    ```
 
-    If you want to control the version of [Instant Client], pass the
-    `INSTANTCLIENT_VERSION` AND `INSTANTCLIENT_VDIR` (the version with dots
-    removed) arguments:
-
-        docker build -t sqitch-oracle \
-               --build-arg INSTANTCLIENT_VERSION=21.3.0.0.0 \
-               --build-arg INSTANTCLIENT_VDIR=213000 \
-               .
+    > Support for arm64 is included, but DBD::Oracle fails to build with this
+    > error:
+    >
+    >     39.41 /usr/bin/ld: cannot find -lclntshcore: No such file or directory
+    >
+    > The file seems to be missing from the arm64 Instant Client download.
+    > Once it's fixed, remove `ARCHS=amd64` from the above command to build
+    > both x86 and arm64 images.
 
 2.  Set up a [`tnsnames.ora` file] in your home directory. For example,
     `~./sqlplus/tnsnames.ora`.
