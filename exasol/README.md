@@ -1,6 +1,9 @@
 Sqitch Exasol Docker Image
 ==========================
 
-Build an image named `sqitch-exasol` with this command:
+Build an image named `sqitch-exasol` with this command from the root
+directory:
 
-    docker build -t sqitch-exasol .
+``` sh
+env env DIR=exasol ARCHS=amd64 ./build
+```
