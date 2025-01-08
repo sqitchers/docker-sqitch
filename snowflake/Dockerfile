@@ -7,16 +7,16 @@ COPY conf ./
 # Tell SnowSQL where to store its versions and config. Need to keep it inside
 # the image so it doesn't try to load the version from $HOME, which will
 # typically be mounted to point to the originating host.
-ENV WORKSPACE /var/snowsql
+ENV WORKSPACE=/var/snowsql
 
 # Set locale for Python triggers.
 ENV LC_ALL=C.UTF-8 LANG=C.UTF-8
 
 # CONFIGURE the ODBC driver and SnowSQL versions to download.
 # https://docs.snowflake.com/en/user-guide/snowsql-install-config
-# https://docs.snowflake.com/en/release-notes/client-change-log-snowsql
+# https://docs.snowflake.com/en/release-notes/clients-drivers/snowsql
 # https://sfc-repo.snowflakecomputing.com/index.html
-ARG ODBC_VERSION=3.4.0
+ARG ODBC_VERSION=3.5.0
 ARG SNOWSQL_VERSION=1.3.2
 
 # Install prereqs.
@@ -63,4 +63,4 @@ RUN chmod --recursive a+rx /var/.snowsql
 
 # The .snowsql directory is copied to /var.
 USER sqitch
-ENV SNOWSQL_DOWNLOAD_DIR /var/.snowsql
+ENV SNOWSQL_DOWNLOAD_DIR=/var/.snowsql

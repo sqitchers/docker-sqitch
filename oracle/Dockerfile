@@ -2,14 +2,14 @@ FROM debian:bookworm-slim AS ora-build
 
 WORKDIR /work
 
-# Alwyays install the latest version of instantclient.
+# Always install the latest version of instantclient.
 # https://www.oracle.com/database/technologies/instant-client/linux-x86-64-downloads.html
 # https://www.oracle.com/database/technologies/instant-client/linux-arm-aarch64-downloads.html
 
 ENV BASEURI=https://download.oracle.com/otn_software/linux/instantclient/instantclient
-ENV ORACLE_HOME /work/instantclient
-ENV LD_LIBRARY_PATH /work/instantclient
-ENV PERL5LIB /work/tmp/lib/perl5
+ENV ORACLE_HOME=/work/instantclient
+ENV LD_LIBRARY_PATH=/work/instantclient
+ENV PERL5LIB=git/work/tmp/lib/perl5
 
 RUN mkdir -p /usr/share/man/man1 /usr/share/man/man7 \
     # Install dependencies, including latest platform-specific instantclient.

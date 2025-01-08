@@ -5,7 +5,7 @@ WORKDIR /work
 # Download and unpack EXAplus and the ODBC driver.
 # COPY *.tar.gz ./
 # https://downloads.exasol.com/clients-and-drivers
-ARG version=24.1.2
+ARG version=24.2.0
 ADD https://x-up.s3.amazonaws.com/7.x/$version/EXAplus-$version.tar.gz \
     https://x-up.s3.amazonaws.com/7.x/$version/Exasol_ODBC-$version-Linux_x86_64.tar.gz \
     ./
@@ -19,7 +19,7 @@ RUN tar zxf Exasol_ODBC-$version-Linux_x86_64.tar.gz \
 
 FROM --platform=linux/amd64 sqitch/sqitch:latest
 
-# Install runtime dependencies, remove unnecesary files, and create symlink.
+# Install runtime dependencies, remove unnecessary files, and create symlink.
 USER root
 RUN apt-get -qq update \
     && mkdir -p /usr/share/man/man1 \
@@ -30,7 +30,7 @@ RUN apt-get -qq update \
     && mkdir -p /opt/exasol/ \
     && ln -s /opt/exaplus/exaplus /bin
 
-# Install EXAplus and the ODDB driver & config.
+# Install EXAplus and the ODDC driver & config.
 COPY --from=exa-build /work/exaplus /opt/exaplus/
 COPY --from=exa-build /work/odbc /opt/exasol/odbc/lib
 COPY odbcinst.ini /etc/
