@@ -17,7 +17,7 @@ ENV LC_ALL=C.UTF-8 LANG=C.UTF-8
 # https://docs.snowflake.com/en/release-notes/clients-drivers/snowsql
 # https://sfc-repo.snowflakecomputing.com/index.html
 ARG ODBC_VERSION=3.5.0
-ARG SNOWSQL_VERSION=1.3.2
+ARG SNOWSQL_VERSION=1.3.3
 
 # Install prereqs.
 ARG sf_account
@@ -45,7 +45,7 @@ RUN apt-get -qq update \
 
 FROM sqitch/sqitch:latest
 
-# Install runtime dependencies, remove unnecesary files, and create log dir.
+# Install runtime dependencies, remove unnecessary files, and create log dir.
 USER root
 RUN apt-get -qq update \
     && apt-get -qq --no-install-recommends install unixodbc \

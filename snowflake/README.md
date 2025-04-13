@@ -10,7 +10,8 @@ Sqitch) with this command from the root directory of this project, replacing
 
 The build will download the [SnowSQL installer] and [ODBC driver] from public
 repositories; if there are errors, check that the version number are correct
-in the [client changes].
+in the [client changes]. The image will contain an `odbc.ini` DSN named for
+`$ACCOUNT`.
 
 If the resulting image will be pushed to a private Docker registry, set the
 `$REGISTRY` environment variable:
@@ -35,6 +36,10 @@ Or from a private repository:
 ``` sh
 env SQITCH_IMAGE=registry.example.com/sqitch:snowflake ./sqitch
 ```
+
+To add additional DSNs or configurations, edit `~/.odbc.ini` on the Docker
+host server, which `docker-sqitch.ini` mounts as the home directory inside the
+container.
 
   [SnowSQL installer]: https://docs.snowflake.net/manuals/user-guide/snowsql-install-config.html
   [ODBC driver]: https://docs.snowflake.net/manuals/user-guide/odbc-download.html

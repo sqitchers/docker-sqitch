@@ -16,7 +16,7 @@ passopt=(
 case "$(uname -s)" in
     Linux*)
         passopt+=(-e "SQITCH_ORIG_FULLNAME=$(getent passwd $user | cut -d: -f5 | cut -d, -f1)")
-        passopt+=(-u $(id -u ${user}):$(id -g ${user}))
+        passopt+=(-u "$(id -u "${user}"):$(id -g "${user}")")
         ;;
     Darwin*)
         passopt+=(-e "SQITCH_ORIG_FULLNAME=$(/usr/bin/id -P $user | awk -F '[:]' '{print $8}')")
@@ -42,13 +42,13 @@ for var in \
     SNOWSQL_ACCOUNT SNOWSQL_USER SNOWSQL_PWD SNOWSQL_HOST SNOWSQL_PORT SNOWSQL_DATABASE SNOWSQL_REGION SNOWSQL_WAREHOUSE SNOWSQL_PRIVATE_KEY_PASSPHRASE SNOWSQL_ROLE
 do
     if [ -n "${!var}" ]; then
-       passopt+=(-e $var)
+       passopt+=(-e "$var")
     fi
 done
 
 # Determine the name of the container home directory.
 homedst=/home
-if [ $(id -u ${user}) -eq 0 ]; then
+if [ "$(id -u "${user}")" -eq 0 ]; then
     homedst=/root
 fi
 # Set HOME, since the user ID likely won't be the same as for the sqitch user.

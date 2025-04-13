@@ -34,7 +34,7 @@ if [ "$GITHUB_REF_TYPE" == "tag" ]; then
     fi
 fi
 
-# Build and export imaages to Docker for all supported architectures.
+# Build and export images to Docker for all supported architectures.
 for arch in $ARCHS; do
     printf "Building for linux/%s\n" "${arch}"
     docker buildx build --platform="linux/${arch}" --pull --load --progress=plain \
