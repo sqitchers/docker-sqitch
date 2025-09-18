@@ -13,4 +13,3 @@ MySQL
         docker run -it --rm mysql mysql -h host.docker.internal --execute 'CREATE DATABASE flipr'
 
 *   Test with the URI `db:mysql://root@host.docker.internal/flipr`.
-
