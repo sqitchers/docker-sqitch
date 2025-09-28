@@ -17,3 +17,7 @@ snowflake: snowflake/Dockerfile
 # Exasol currently offers no ARM support.
 exasol: exasol/Dockerfile
 	env DIR=exasol REGISTRY=sqitch ARCHS=amd64 ./build
+
+# ClickHouse currently offers no ARM support for its ODBC driver.
+clickhouse: clickhouse/Dockerfile
+	env DIR=clickhouse REGISTRY=sqitch ARCHS=amd64 ./build

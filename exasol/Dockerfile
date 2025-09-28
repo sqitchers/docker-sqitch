@@ -1,4 +1,5 @@
-FROM --platform=linux/amd64 debian:bookworm-slim AS exa-build
+# The Exasol ODBC driver is not available for ARM64.
+FROM --platform=${BUILDPLATFORM} debian:bookworm-slim AS exa-build
 
 WORKDIR /work
 
@@ -17,7 +18,7 @@ RUN tar zxf Exasol_ODBC-$version-Linux_x86_64.tar.gz \
     && mv EXAplus-$version/ exaplus \
     && rm -rf exaplus/doc
 
-FROM --platform=linux/amd64 sqitch/sqitch:latest
+FROM --platform=${BUILDPLATFORM} sqitch/sqitch:latest
 
 # Install runtime dependencies, remove unnecessary files, and create symlink.
 USER root
