@@ -27,8 +27,9 @@ This project is the source for creating the official [Sqitch Project] Docker
 Image. It's built on [Debian bookworm-slim] in an effort to keep the image as
 small as possible while supporting all known engines. It includes support for
 managing [PostgreSQL], [CockroachDB], [YugabyteDB], [SQLite], [MariaDB]
-([MySQL]), and [Firebird] databases, and other images may be built to support
-for the other database engines that Sqitch supports.
+([MySQL]), and [Firebird] databases. Images whose tags include `clickhouse`
+add support for [ClickHouse]. Other images may be built to support for the
+other database engines that Sqitch supports.
 
 Notes
 -----
@@ -67,12 +68,12 @@ Notes
     for it to land). In the meantime you can [use a NAT gateway
     container](https://github.com/qoomon/docker-host) to forward traffic to the
     Docker host.
-*   Custom images for [Oracle], [Snowflake], [Exasol], or [ClickHouse] can be
-    built by downloading the appropriate binary files and using the
-    `Dockerfile`s in the appropriately-named subdirectories of this
+*   Custom images for [Oracle], [Snowflake], and [Exasol] can be built by
+    using the `Dockerfile`s in the appropriately-named subdirectories of this
     repository.
 *   The Sqitch image is built with AMD64 and ARM64 support, but the [Oracle],
-    [Snowflake] and [Exasol] images can currently only be built for AMD64.
+    [Snowflake], [Exasol], and [ClickHouse] images can currently only be
+    built for AMD64.
 *   In an effort to keep things as simple as possible, the only editor included
     and configured for use in the image is [nano]. This is a very simple, tiny
     text editor suitable for editing change descriptions and the like. Its

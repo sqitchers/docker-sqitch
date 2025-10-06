@@ -21,7 +21,7 @@ RUN apt-get -qq update \
     && mkdir odbc \
     && unzip -p odbc.zip "clickhouse-odbc-${ODBC_VERSION}-Linux.tar.gz" | tar -xzf - --strip-components 1 -C odbc
 
-FROM --platform=${BUILDPLATFORM} sqitch/sqitch:v${VERSION:-latest}
+FROM --platform=${BUILDPLATFORM} sqitch/sqitch:${VERSION:-latest}
 
 # Install runtime dependencies and remove unnecessary files.
 USER root
