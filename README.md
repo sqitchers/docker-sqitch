@@ -10,6 +10,9 @@ Synopsis
 docker pull sqitch/sqitch
 curl -L https://git.io/JJKCn -o sqitch && chmod +x sqitch
 ./sqitch help
+
+export SQITCH_IMAGE=sqitch/sqitch:latest-clickhouse
+./sqitch help
 ```
 
 ### Windows
@@ -17,6 +20,9 @@ curl -L https://git.io/JJKCn -o sqitch && chmod +x sqitch
 ```bat
 docker pull sqitch/sqitch
 WebRequest -Uri "https://git.io/JTAi6" -OutFile "sqitch.bat"
+.\sqitch help
+
+set SQITCH_IMAGE=sqitch/sqitch:latest-clickhouse
 .\sqitch help
 ```
 
