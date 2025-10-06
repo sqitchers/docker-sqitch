@@ -7,7 +7,7 @@ RUN mkdir -p /usr/share/man/man1 /usr/share/man/man7 \
     && apt-get -qq update \
     && apt-get -qq install build-essential perl curl \
        unixodbc-dev firebird-dev sqlite3 libpq-dev libmariadb-dev \
-    && curl -LO https://cpan.metacpan.org/authors/id/D/DW/DWHEELER/App-Sqitch-v$VERSION.tar.gz \
+    && curl -LO https://github.com/sqitchers/sqitch/releases/download/v$VERSION/App-Sqitch-v$VERSION.tar.gz \
     && mkdir src \
     && tar -zxf App-Sqitch-v$VERSION.tar.gz --strip-components 1 -C src
 
