@@ -1,3 +1,4 @@
+ARG VERSION
 # Alas, the ClickHouse ODBC drivers are not yet available for ARM.
 # https://github.com/ClickHouse/clickhouse-odbc/issues/524
 FROM --platform=${BUILDPLATFORM} debian:bookworm-slim AS ch-build
@@ -20,8 +21,7 @@ RUN apt-get -qq update \
     && mkdir odbc \
     && unzip -p odbc.zip "clickhouse-odbc-${ODBC_VERSION}-Linux.tar.gz" | tar -xzf - --strip-components 1 -C odbc
 
-RUN ls -lah
-FROM --platform=${BUILDPLATFORM} sqitch/sqitch:latest
+FROM --platform=${BUILDPLATFORM} sqitch/sqitch:v${VERSION:-latest}
 
 # Install runtime dependencies and remove unnecessary files.
 USER root
