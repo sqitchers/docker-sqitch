@@ -1,7 +1,7 @@
 ARG VERSION
 # Alas, the ClickHouse ODBC drivers are not yet available for ARM.
 # https://github.com/ClickHouse/clickhouse-odbc/issues/524
-FROM --platform=${BUILDPLATFORM} debian:bookworm-slim AS ch-build
+FROM --platform=${BUILDPLATFORM} debian:trixie-slim AS ch-build
 
 WORKDIR /work
 

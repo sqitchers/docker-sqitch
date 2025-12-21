@@ -1,5 +1,5 @@
 # The Exasol ODBC driver is not available for ARM64.
-FROM --platform=${BUILDPLATFORM} debian:bookworm-slim AS exa-build
+FROM --platform=${BUILDPLATFORM} debian:trixie-slim AS exa-build
 
 WORKDIR /work
 
