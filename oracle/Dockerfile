@@ -1,4 +1,4 @@
-FROM debian:bookworm-slim AS ora-build
+FROM debian:trixie-slim AS ora-build
 
 WORKDIR /work
 

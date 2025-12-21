@@ -1,4 +1,4 @@
-FROM debian:bookworm-slim AS sqitch-build
+FROM debian:trixie-slim AS sqitch-build
 
 # Install system dependencies.
 WORKDIR /work
@@ -31,12 +31,12 @@ RUN perl Build.PL --quiet --install_base /app --etcdir /etc/sqitch \
 
 ################################################################################
 # Copy to the final image without all the build stuff.
-FROM debian:bookworm-slim AS sqitch
+FROM debian:trixie-slim AS sqitch
 
 # Install runtime system dependencies and remove unnecessary files.
 RUN mkdir -p /usr/share/man/man1 /usr/share/man/man7 \
     && apt-get -qq update \
-    && apt-get -qq --no-install-recommends install less libperl5.36 perl-doc nano ca-certificates \
+    && apt-get -qq --no-install-recommends install less libperl5.40 perl-doc nano ca-certificates \
        sqlite3 \
        firebird3.0-utils libfbclient2 \
        libpq5 postgresql-client \
