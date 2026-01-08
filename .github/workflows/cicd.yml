@@ -48,7 +48,7 @@ jobs:
             org.opencontainers.image.source=${{ env.SOURCE }}
             org.opencontainers.image.version=v${{ env.VERSION }}
             org.opencontainers.image.licenses=${{ env.LICENSE }}
-            org.opencontainers.image.ref.name=docker.io/debian/bookworm-slim
+            org.opencontainers.image.ref.name=docker.io/debian/trixie-slim
 
       - name: Log in to Docker Hub
         uses: docker/login-action@v3
