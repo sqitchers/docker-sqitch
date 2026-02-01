@@ -1,3 +1,4 @@
+ARG VERSION
 FROM debian:trixie-slim AS snow-build
 
 WORKDIR /work
@@ -16,7 +17,7 @@ ENV LC_ALL=C.UTF-8 LANG=C.UTF-8
 # https://docs.snowflake.com/en/user-guide/snowsql-install-config
 # https://docs.snowflake.com/en/release-notes/clients-drivers/snowsql
 # https://sfc-repo.snowflakecomputing.com/index.html
-ARG ODBC_VERSION=3.11.0
+ARG ODBC_VERSION=3.14.0
 ARG SNOWSQL_VERSION=1.4.5
 
 # Install prereqs.
@@ -27,7 +28,7 @@ RUN apt-get -qq update \
     && case "$(arch)" in aarch64) export SNOWPLAT=aarch64 ODBCPLAT=aarch64 DIRARCH=aarch64 ;; x86_64) export ODBCPLAT=x8664 SNOWPLAT=x86_64 ;; esac \
     # Configure ODBC.
     # https://docs.snowflake.net/manuals/user-guide/odbc-linux.html
-    && curl https://sfc-repo.snowflakecomputing.com/odbc/linux${DIRARCH}/${ODBC_VERSION}/snowflake_linux_${ODBCPLAT}_odbc-${ODBC_VERSION}.tgz -o snowflake_odbc.tgz \
+    && curl -f https://sfc-repo.snowflakecomputing.com/odbc/linux${DIRARCH}/${ODBC_VERSION}/snowflake_linux_${ODBCPLAT}_odbc-${ODBC_VERSION}.tgz -o snowflake_odbc.tgz \
     && gunzip -f *.tgz && tar vxf *.tar \
     && mkdir odbc \
     && mv snowflake_odbc/lib snowflake_odbc/ErrorMessages odbc/ \
@@ -38,12 +39,12 @@ RUN apt-get -qq update \
     && cat odbcinst.ini >> /etc/odbcinst.ini \
     # Unpack and upgrade snowsql, then overwrite its config file.
     # && SNOWSQL_DEST=. SNOWSQL_LOGIN_SHELL=/dev/null bash snowsql.bash \
-    && curl https://sfc-repo.snowflakecomputing.com/snowsql/bootstrap/1.3/linux_${SNOWPLAT}/snowsql-1.3.2-linux_${SNOWPLAT}.bash -o snowsql.bash \
+    && curl -f https://sfc-repo.snowflakecomputing.com/snowsql/bootstrap/${SNOWSQL_VERSION%.*}/linux_${SNOWPLAT}/snowsql-${SNOWSQL_VERSION}-linux_${SNOWPLAT}.bash -o snowsql.bash \
     && sed -e '1,/^exit$/d' snowsql.bash | tar zxf - \
     && ./snowsql -Uv \
     && echo "[connections]\naccountname = $sf_account\n\n[options]\nnoup = true" > /var/snowsql/.snowsql/config
 
-FROM sqitch/sqitch:latest
+FROM sqitch/sqitch:${VERSION:-latest}
 
 # Install runtime dependencies, remove unnecessary files, and create log dir.
 USER root

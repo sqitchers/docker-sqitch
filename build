@@ -23,7 +23,7 @@ fi
 # Always include "latest" and the version.
 tagopt=(
     --tag "${REGISTRY}/${NAME}:${TAG}"
-    --tag "${REGISTRY}/${NAME}:v${VERSION}${PKG}"
+    --tag "${REGISTRY}/${NAME}:${VERSION}${PKG}"
 )
 
 # Include the git tag if differnt from the version.
@@ -43,11 +43,11 @@ for arch in $ARCHS; do
     --label org.opencontainers.image.url="${URL}" \
     --label org.opencontainers.image.documentation="${DOCS}" \
     --label org.opencontainers.image.source="${SOURCE}" \
-    --label org.opencontainers.image.version="v${VERSION}" \
+    --label org.opencontainers.image.version="${VERSION}" \
     --label org.opencontainers.image.revision="$(git rev-parse --abbrev-ref HEAD)" \
     --label org.opencontainers.image.vendor="${VENDOR}" \
     --label org.opencontainers.image.licenses="${LICENSE}" \
-    --label org.opencontainers.image.ref.name="${NAME}${PKG}-v${VERSION}" \
+    --label org.opencontainers.image.ref.name="${NAME}${PKG}-${VERSION}" \
     --label org.opencontainers.image.title="${TITLE}" \
     --label org.opencontainers.image.description="${DESCRIPTION}" \
     "${tagopt[@]}" \

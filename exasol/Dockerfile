@@ -1,3 +1,4 @@
+ARG VERSION
 # The Exasol ODBC driver is not available for ARM64.
 FROM --platform=${BUILDPLATFORM} debian:trixie-slim AS exa-build
 
@@ -6,19 +7,18 @@ WORKDIR /work
 # Download and unpack EXAplus and the ODBC driver.
 # COPY *.tar.gz ./
 # https://downloads.exasol.com/clients-and-drivers
-ARG version=25.2.4
-ADD https://x-up.s3.amazonaws.com/7.x/$version/EXAplus-$version.tar.gz \
-    https://x-up.s3.amazonaws.com/7.x/$version/Exasol_ODBC-$version-Linux_x86_64.tar.gz \
+ARG exa_version=25.2.5
+ADD https://x-up.s3.amazonaws.com/7.x/$exa_version/EXAplus-$exa_version.tar.gz \
+    https://x-up.s3.amazonaws.com/7.x/$exa_version/Exasol_ODBC-$exa_version-Linux_x86_64.tar.gz \
     ./
 
-RUN tar zxf Exasol_ODBC-$version-Linux_x86_64.tar.gz \
-    && ls -l \
-    && mv Exasol_ODBC-$version-Linux_x86_64/lib odbc \
-    && tar zxf EXAplus-$version.tar.gz \
-    && mv EXAplus-$version/ exaplus \
+RUN tar zxf Exasol_ODBC-$exa_version-Linux_x86_64.tar.gz \
+    && mv Exasol_ODBC-$exa_version-Linux_x86_64/lib odbc \
+    && tar zxf EXAplus-$exa_version.tar.gz \
+    && mv EXAplus-$exa_version/ exaplus \
     && rm -rf exaplus/doc
 
-FROM --platform=${BUILDPLATFORM} sqitch/sqitch:latest
+FROM --platform=${BUILDPLATFORM} sqitch/sqitch:${VERSION:-latest}
 
 # Install runtime dependencies, remove unnecessary files, and create symlink.
 USER root

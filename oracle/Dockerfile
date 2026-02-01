@@ -1,3 +1,4 @@
+ARG VERSION
 FROM debian:trixie-slim AS ora-build
 
 WORKDIR /work
@@ -16,9 +17,9 @@ RUN mkdir -p /usr/share/man/man1 /usr/share/man/man7 \
     && apt-get -qq update \
     && apt-get -qq install build-essential libarchive-tools curl libaio-dev \
     && case "$(arch)" in aarch64) export ORAPLAT=-arm64 ;; x86_64) export ORAPLAT=x64 ;; esac \
-    && curl "${BASEURI}-basic-linux${ORAPLAT}.zip" -o instantclient-basic.zip \
-    && curl "${BASEURI}-sqlplus-linux${ORAPLAT}.zip" -o instantclient-sqlplus.zip \
-    && curl "${BASEURI}-sdk-linux${ORAPLAT}.zip" -o instantclient-sdk.zip \
+    && curl -f "${BASEURI}-basic-linux${ORAPLAT}.zip" -o instantclient-basic.zip \
+    && curl -f "${BASEURI}-sqlplus-linux${ORAPLAT}.zip" -o instantclient-sqlplus.zip \
+    && curl -f "${BASEURI}-sdk-linux${ORAPLAT}.zip" -o instantclient-sdk.zip \
     && mkdir instantclient \
     && bsdtar -C instantclient --strip-components 1 -zxf instantclient-basic.zip \
     && bsdtar -C instantclient --strip-components 1 -zxf instantclient-sqlplus.zip \
@@ -26,7 +27,7 @@ RUN mkdir -p /usr/share/man/man1 /usr/share/man/man7 \
     && cp -rf instantclient instantclient.install \
     && bsdtar -C instantclient --strip-components 1 -zxf instantclient-sdk.zip \
     # Install DBI in its own directory, then install DBD::Oracle.
-    && curl https://cpanmin.us > cpanm && chmod +x cpanm \
+    && curl -f https://cpanmin.us > cpanm && chmod +x cpanm \
     && ./cpanm install -l tmp --quiet --notest DBI \
     && ./cpanm install -l local --quiet --notest --no-man-pages DBD::Oracle \
     # Remove unneeded files.
@@ -37,7 +38,7 @@ RUN mkdir -p /usr/share/man/man1 /usr/share/man/man7 \
     && find local -type d -empty -delete \
     && rm -rf instantclient.install/*.jar instantclient.install/*README instantclient.install/nework
 
-FROM sqitch/sqitch:latest
+FROM sqitch/sqitch:${VERSION:-latest}
 
 # Install instantclient basic and SQL*Plus and copy DBD::Oracle.
 USER root

@@ -15,9 +15,9 @@ ARG TARGETARCH
 
 RUN apt-get -qq update \
     && env DEBIAN_FRONTEND=noninteractive apt-get install -qq curl unzip \
-    && LATEST_VERSION=$(curl -s "${TSV_URL}" | grep -Eo '[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+' | sort -V -r | head -n 1) \
-    && curl -sSL "https://packages.clickhouse.com/tgz/stable/clickhouse-common-static-$LATEST_VERSION-${TARGETARCH}.tgz" | tar zxf - --strip-components 1 \
-    && curl -sSLo odbc.zip "https://github.com/ClickHouse/clickhouse-odbc/releases/download/${ODBC_VERSION}.${ODBC_DATE}/clickhouse-odbc-linux-Clang-UnixODBC-Release.zip" \
+    && LATEST_VERSION=$(curl -sf "${TSV_URL}" | grep -Eo '[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+' | sort -V -r | head -n 1) \
+    && curl -sSLf "https://packages.clickhouse.com/tgz/stable/clickhouse-common-static-$LATEST_VERSION-${TARGETARCH}.tgz" | tar zxf - --strip-components 1 \
+    && curl -sSLfo odbc.zip "https://github.com/ClickHouse/clickhouse-odbc/releases/download/${ODBC_VERSION}.${ODBC_DATE}/clickhouse-odbc-linux-Clang-UnixODBC-Release.zip" \
     && mkdir odbc \
     && unzip -p odbc.zip "clickhouse-odbc-${ODBC_VERSION}-Linux.tar.gz" | tar -xzf - --strip-components 1 -C odbc
 
