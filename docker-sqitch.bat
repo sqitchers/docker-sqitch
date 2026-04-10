@@ -29,7 +29,7 @@ for %%i in (
     CLICKHOUSE_HOST CLICKHOUSE_USER CLICKHOUSE_PASSWORD
 ) do if defined %%i (
     echo %%i is defined as !%%i!
-    SET passopt=!passopt! -e %%i=!%%i!
+    SET passopt=!passopt! -e "%%i"
 )
 
 REM # Determine the name of the container home directory.
