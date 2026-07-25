@@ -15,7 +15,7 @@ RUN mkdir -p /usr/share/man/man1 /usr/share/man/man7 \
 ENV PERL5LIB=/work/local/lib/perl5
 RUN curl -sfL --compressed https://git.io/cpm > cpm && chmod +x cpm \
     && ./cpm install -L local --verbose --no-test --show-build-log-on-failure ExtUtils::MakeMaker List::MoreUtils::XS \
-    && ./cpm install -L local --verbose --no-test --show-build-log-on-failure --with-recommends \
+    && ./cpm install -L local --verbose --no-test --show-build-log-on-failure --top-level-phase configure,build,test,runtime --top-level-relationship requires,recommends \
         --with-configure --cpanfile src/dist/cpanfile
 
 # Build, test, bundle, prune.
