@@ -7,7 +7,7 @@ WORKDIR /work
 # Download and unpack EXAplus and the ODBC driver.
 # COPY *.tar.gz ./
 # https://downloads.exasol.com/clients-and-drivers
-ARG exa_version=25.2.5
+ARG exa_version=26.2.10
 ADD https://x-up.s3.amazonaws.com/7.x/$exa_version/EXAplus-$exa_version.tar.gz \
     https://x-up.s3.amazonaws.com/7.x/$exa_version/Exasol_ODBC-$exa_version-Linux_x86_64.tar.gz \
     ./

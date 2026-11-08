@@ -17,8 +17,8 @@ ENV LC_ALL=C.UTF-8 LANG=C.UTF-8
 # https://docs.snowflake.com/en/user-guide/snowsql-install-config
 # https://docs.snowflake.com/en/release-notes/clients-drivers/snowsql
 # https://sfc-repo.snowflakecomputing.com/index.html
-ARG ODBC_VERSION=3.14.0
-ARG SNOWSQL_VERSION=1.4.5
+ARG ODBC_VERSION=4.3.0
+ARG SNOWSQL_VERSION=1.5.4
 
 # Install prereqs.
 ARG sf_account
